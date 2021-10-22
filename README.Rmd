@@ -5,7 +5,7 @@ output: github_document
 ---
 Introduction:
 
-Our aim in this project is to find out how iMDb ratings compare for films from different countries. We are using a data set called iMDb movies that has come from kaggle. We will also compare how different variables (title, year published, genre, budget, USA gross income, Worldwide gross income, duration and actors) affect iMDb ratings and also how many votes were cast for a film to recieve said rating. 
+Our aim in this project is to find out how iMDb ratings compare for films from different countries. We are using a data set called iMDb movies that has come from kaggle. The data set was orignally from the public iMDb website which shows all the ratings and then this was filtered to only films with more than 100 votes. Each case is a different flim for this data set. We will also compare how different variables (title, year published, genre, budget, USA gross income, Worldwide gross income, duration and actors) affect iMDb ratings and also how many votes were cast for a film to recieve said rating. 
 
 ## Summary
 
