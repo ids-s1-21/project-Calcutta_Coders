@@ -1,5 +1,7 @@
 # data
 
+library(tidyverse)
+
 Place data file(s) in this folder.
 
 Then, include codebooks (variables, and their descriptions) for your data file(s)
