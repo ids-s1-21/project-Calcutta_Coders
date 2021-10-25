@@ -17,9 +17,33 @@ library(broom)
 
 ## 2. Data
 
-
+```{r read-data}
+glimpse(imdb)
+```
 
 ## 3. Data analysis plan
 
 
+```{r data-analysis-genre}
+imdb_genre <- imdb %>%
+  separate_rows(genre) 
+
+imbd_genre %>%
+  group_by(genre) %>%
+  summarise(
+    mean_rating = mean(avg_vote, na.rm = TRUE),
+    median_rating = median(avg_vote, na.rm = TRUE)
+    ) %>%
+  arrange(desc(mean_rating))
+
+imdb_genre %>%
+  ggplot(aes(x = avg_vote, y = genre)) +
+  geom_violin(alpha = 0.5)
+```
+
+```{r data-analysis-income}
+imdb %>%
+  ggplot(aes(x = worlwide_gross_income, y = avg_vote)) +
+  geom_point(alpha = 0.1)
+```
 
