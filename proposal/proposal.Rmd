@@ -7,6 +7,7 @@ output: github_document
 ```{r load-packages, message = FALSE}
 library(tidyverse)
 library(broom)
+library(ggridges)
 ```
 
 *For instructions on what each section should include, please see the [project page](https://idsed.digital/assessments/project/#proposal) on the course website. Remove this text when completing your proposal*.
@@ -26,9 +27,13 @@ glimpse(imdb)
 
 ```{r data-analysis-genre}
 imdb_genre <- imdb %>%
-  separate_rows(genre) 
+  mutate(genre = case_when(
+    genre == "Sci Fi" ~ "Sci-Fi",
+    TRUE ~ genre)) %>%
+  separate_rows(genre)
+  
 
-imbd_genre %>%
+imdb_genre %>%
   group_by(genre) %>%
   summarise(
     mean_rating = mean(avg_vote, na.rm = TRUE),
@@ -38,12 +43,34 @@ imbd_genre %>%
 
 imdb_genre %>%
   ggplot(aes(x = avg_vote, y = genre)) +
-  geom_violin(alpha = 0.5)
+  geom_density_ridges(alpha = 0.5)
 ```
 
 ```{r data-analysis-income}
-imdb %>%
+imdb_income <- imdb %>%
+  mutate( 
+  worlwide_gross_income = na_if(worlwide_gross_income, "")) %>%
+  transform(worlwide_gross_income = as.numeric(gsub("\\$", "", worlwide_gross_income)))
+   
+imdb_income %>%
   ggplot(aes(x = worlwide_gross_income, y = avg_vote)) +
+  geom_point(alpha = 0.1) +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r data-analysis-votes}
+imdb %>%
+  ggplot(aes(x = votes, y = avg_vote)) +
   geom_point(alpha = 0.1)
 ```
 
+```{r data-analysis-duration}
+imdb %>%
+  ggplot(aes(x = duration, y = avg_vote)) +
+  geom_point(alpha = 0.1)
+```
+```{r data-analysis-metascore}
+imdb %>%
+  ggplot(aes(x = metascore, y = avg_vote)) +
+  geom_point(alpha = 0.2)
+```
