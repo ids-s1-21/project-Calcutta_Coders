@@ -11,6 +11,16 @@ variables (title, year published, genre, budget, USA gross income,
 Worldwide gross income, duration and actors) affect iMDb ratings and
 also how many votes were cast for a film to recieve said rating.
 
+Data analysis plan:
+
+The outcome (response, Y) will be the average imdb ratings, The
+predictor (explanatory, X) will be country. To properly explore these
+realtionships we will use gross and worlwide income to see if the movie
+did well worldwide or just in the us, we can also …
+
+We will use comparison groups such as worldwide gross to see if this
+film sold well worldwide or just in the US, if it did well worldwide
+
 ## Summary
 
 Write-up of your project and findings go here. Think of this as the text
