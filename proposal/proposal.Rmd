@@ -10,9 +10,6 @@ library(broom)
 library(ggridges)
 ```
 
-
-*For instructions on what each section should include, please see the [project page](https://idsed.digital/assessments/project/#proposal) on the course website. Remove this text when completing your proposal*.
-
 ## 1. Introduction
 
 Our aim in this project is to find out how iMDb ratings compare for films from different countries. We are using a data set called iMDb movies that has come from kaggle. We will also compare how different variables (title, year published, genre, budget, USA gross income, Worldwide gross income, duration and actors) affect iMDb ratings and also how many votes were cast for a film to recieve said rating. 
@@ -21,15 +18,15 @@ Our aim in this project is to find out how iMDb ratings compare for films from d
 ## 2. Data
 
 ```{r read-data}
+imdb <- read.csv(file = "../data/IMDb_movies.csv", header = TRUE, skip = 1)
 glimpse(imdb)
 ```
 
 ## 3. Data analysis plan
 
-The outcome (response, Y) will be the average imdb ratings, The predictor (explanatory, X) will be country. To properly explore more relationships we will use gross and worlwide income to see if the movie did well worldwide or just in the us. We can also take a look at how factors such as genre, number of votes and duration impact the rating of a movie. We can also take a look at how IMDb rates their films in comparison to another rating site, metascore.
+The outcome (response, Y) will be the average imdb ratings, The predictor (explanatory, X) will be country. To properly explore more relationships we will use gross and worlwide income to see if the movie did well worldwide or just in the us. We can also take a look at how factors such as genre, number of votes and duration impact the rating of a movie. We can see how IMDb rates their films in comparison to another rating site, metascore.
 
-After filtering for the top 12 countries who produce the largest number of films, the distribution of `avg_vote` is observed. The countries with the higher ratings include Japan, Belgium, France, Germany and India. Even though the USA has the largest number of films produced, their mean rating is the lowest of these countries.
-```{r data-analysis-genre}
+```{r data-analysis-country}
 imdb_country <- imdb %>%
   mutate(country = case_when(
     country == "Hong Kong" ~ "Hong-Kong",
@@ -57,8 +54,8 @@ imdb_country %>%
   ggplot(aes(x = avg_vote, y = country)) +
   geom_density_ridges(alpha = 0.5)
 ```
+After filtering for the top 12 countries who produce the largest number of films, the distribution of `avg_vote` is observed. The countries with the higher ratings include Japan, Belgium, France, Germany and India. Even though the USA has the largest number of films produced, their mean rating is the lowest of these countries.
 
-This graph reveals the distribution of `avg_vote`, which is the rating, for every `genre`. As shown by the graph and the summary statistics, some high rated genres include Documentary, Film Noir, Biography, History, War and News. In these data tables, films with multiple genres were counted in each of their catagories.
 ```{r data-analysis-genre}
 imdb_genre <- imdb %>%
   mutate(genre = case_when(
@@ -80,8 +77,8 @@ imdb_genre %>%
   ggplot(aes(x = avg_vote, y = genre)) +
   geom_density_ridges(alpha = 0.5)
 ```
+This graph reveals the distribution of `avg_vote`, which is the rating, for every `genre`. As shown by the graph and the summary statistics, some high rated genres include Documentary, Film Noir, Biography, History, War and News. In these data analyses, films with multiple genres were counted in each of their catagories.
 
-This graph explores the relationship between the `avg_vote` and `worlwide_gross_income`. This graph has a weak positive association suggesting that the more money that is gained from the film, the more likely the film is to be rated well.
 ```{r data-analysis-income}
 imdb_income <- imdb %>%
   mutate( 
@@ -93,24 +90,25 @@ imdb_income %>%
   geom_point(alpha = 0.1) +
   theme(axis.text.x = element_text(angle = 90))
 ```
+This graph explores the relationship between the `avg_vote` and `worlwide_gross_income`. This graph has a weak positive association suggesting that the more money that is gained from the film, the more likely the film is to be rated well.
 
-This graph compared `avg_vote` to `votes`, which indicates a movie's popularity. This graph reveals a positive association, suggesting that the more popular a film is the more likely it will be rated higher.
 ```{r data-analysis-votes}
 imdb %>%
   ggplot(aes(x = votes, y = avg_vote)) +
   geom_point(alpha = 0.1)
 ```
+This graph compared `avg_vote` to `votes`, which indicates a movie's popularity. This graph reveals a positive association, suggesting that the more popular a film is the more likely it will be rated higher.
 
-This graph reveals there is little to no association between the `avg_vote` and `duration` of a movie.
 ```{r data-analysis-duration}
 imdb %>%
   ggplot(aes(x = duration, y = avg_vote)) +
   geom_point(alpha = 0.1)
 ```
+This graph reveals there is little to no association between the `avg_vote` and `duration` of a movie.
 
-This graph shows a positive association between the IMDb rating and the metascore. The graph also reveals that IMDb often rate their moves less than metascore rates them.
 ```{r data-analysis-metascore}
 imdb %>%
   ggplot(aes(x = metascore, y = avg_vote)) +
   geom_point(alpha = 0.1)
 ```
+This graph shows a positive association between the IMDb rating and the metascore. The graph also reveals that IMDb often rate their moves less than metascore rates them.
