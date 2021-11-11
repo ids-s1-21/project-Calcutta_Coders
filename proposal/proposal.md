@@ -1,6 +1,6 @@
 Project proposal
 ================
-Team name
+Calcutta\_Coders
 
 ``` r
 library(tidyverse)
@@ -60,7 +60,7 @@ rating site, metascore.
 imdb_country <- imdb %>%
   mutate(country = case_when(
     country == "Hong Kong" ~ "Hong-Kong",
-    genre == "South Korea" ~ "South-Korea",
+    country == "South Korea" ~ "South-Korea",
     TRUE ~ country)) %>%
   separate_rows(country)
   
@@ -118,8 +118,14 @@ imdb_country %>%
 ``` r
 imdb_country %>%
   filter(country == c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong-Kong", "Turkey", "Belgium")) %>%
-  ggplot(aes(x = avg_vote, y = country)) +
-  geom_density_ridges(alpha = 0.5)
+  ggplot(aes(x = avg_vote, y = country, fill = country)) +
+  geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
+  labs(
+    title = "Distribution of IMDb Average Ratings",
+    subtitle = "for top 12 countries who have produced the most films",
+    x = "Average rating",
+    y = "Country"
+  )
 ```
 
     ## Warning in country == c("USA", "France", "UK", "India", "Italy", "Germany", :
@@ -133,6 +139,35 @@ films, the distribution of `avg_vote` is observed. The countries with
 the higher ratings include Japan, Belgium, France, Germany and India.
 Even though the USA has the largest number of films produced, their mean
 rating is the lowest of these countries.
+
+``` r
+imdb_country %>%
+  filter(country != "USA") %>%
+  group_by(country) %>%
+  summarise(
+    mean_rating = mean(avg_vote, na.rm = TRUE),
+    count = n()
+    ) %>%
+  ggplot(aes(x = count, y = mean_rating)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth() +
+  labs(
+    title = "Country's Mean Average Rating vs. the Number of Films Produced",
+    x = "Count",
+    y = "Mean Average Rating"
+  )
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+![](proposal_files/figure-gfm/data-analysis-country-production-1.png)<!-- -->
+
+This graph intends to answer the question: Do countries who produce
+larger amounts of films have an overall higher rating? After grouping by
+country, the overall average IMDb average rating was calculated along
+with the amount of movies in each category. This graph reveals that
+there is little to no association between the amount of films produced
+and the mean average rating.
 
 ``` r
 imdb_genre <- imdb %>%
@@ -169,8 +204,13 @@ imdb_genre %>%
 
 ``` r
 imdb_genre %>%
-  ggplot(aes(x = avg_vote, y = genre)) +
-  geom_density_ridges(alpha = 0.5)
+  ggplot(aes(x = avg_vote, y = genre, fill = genre)) +
+  geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
+  labs(
+    title = "Distribution of IMDb Average Rating by Genre",
+    x = "Average Rating",
+    y = "Genre"
+  )
 ```
 
     ## Picking joint bandwidth of 0.252
@@ -179,7 +219,7 @@ imdb_genre %>%
 graph reveals the distribution of `avg_vote`, which is the rating, for
 every `genre`. As shown by the graph and the summary statistics, some
 high rated genres include Documentary, Film Noir, Biography, History,
-War and News. In these data tables, films with multiple genres were
+War and News. In these data analyses, films with multiple genres were
 counted in each of their catagories.
 
 ``` r
@@ -196,7 +236,12 @@ imdb_income <- imdb %>%
 imdb_income %>%
   ggplot(aes(x = worlwide_gross_income, y = avg_vote)) +
   geom_point(alpha = 0.1) +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(
+    title = "Worldwide Gross Income vs. Average Rating",
+    x = "Worldwide Gross Income",
+    y = "Average Rating"
+  )
 ```
 
     ## Warning: Removed 54900 rows containing missing values (geom_point).
@@ -210,7 +255,12 @@ likely the film is to be rated well.
 ``` r
 imdb %>%
   ggplot(aes(x = votes, y = avg_vote)) +
-  geom_point(alpha = 0.1)
+  geom_point(alpha = 0.1) +
+  labs(
+    title = "Average Rating Based on the Popularity of Movie",
+    x = "Number of Votes",
+    y = "Average Rating"
+  )
 ```
 
 ![](proposal_files/figure-gfm/data-analysis-votes-1.png)<!-- --> This
@@ -221,22 +271,14 @@ the more popular a film is the more likely it will be rated higher.
 ``` r
 imdb %>%
   ggplot(aes(x = duration, y = avg_vote)) +
-  geom_point(alpha = 0.1)
+  geom_point(alpha = 0.1) +
+  labs(
+    title = "Average Rating Based on Duration of a Movie",
+    x = "Duration",
+    y = "Average Rating"
+  )
 ```
 
 ![](proposal_files/figure-gfm/data-analysis-duration-1.png)<!-- --> This
 graph reveals there is little to no association between the `avg_vote`
 and `duration` of a movie.
-
-``` r
-imdb %>%
-  ggplot(aes(x = metascore, y = avg_vote)) +
-  geom_point(alpha = 0.1)
-```
-
-    ## Warning: Removed 72550 rows containing missing values (geom_point).
-
-![](proposal_files/figure-gfm/data-analysis-metascore-1.png)<!-- -->
-This graph shows a positive association between the IMDb rating and the
-metascore. The graph also reveals that IMDb often rate their moves less
-than metascore rates them.
