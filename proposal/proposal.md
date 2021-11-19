@@ -58,80 +58,78 @@ rating site, metascore.
 
 ``` r
 imdb_country <- imdb %>%
-  mutate(country = case_when(
-    country == "Hong Kong" ~ "Hong-Kong",
-    country == "South Korea" ~ "South-Korea",
-    TRUE ~ country)) %>%
-  separate_rows(country)
-  
+   mutate(country = sub("\\ ", "", country)) %>%
+   separate_rows(country, sep = "\\,")
+   
 imdb_country %>%
-  count(country) %>%
-  arrange(desc(n))
+   count(country) %>%
+   arrange(desc(n))
 ```
 
-    ## # A tibble: 226 × 2
-    ##    country     n
-    ##    <chr>   <int>
-    ##  1 USA     34325
-    ##  2 France   8311
-    ##  3 UK       7490
-    ##  4 India    6373
-    ##  5 Italy    5056
-    ##  6 Germany  4909
-    ##  7 Japan    3701
-    ##  8 Canada   3621
-    ##  9 Spain    2731
-    ## 10 Hong     1884
-    ## # … with 216 more rows
+    ## # A tibble: 366 × 2
+    ##    country      n
+    ##    <chr>    <int>
+    ##  1 USA      33304
+    ##  2 France    7374
+    ##  3 UK        6905
+    ##  4 India     6320
+    ##  5 Italy     4695
+    ##  6 Japan     3499
+    ##  7 Canada    3318
+    ##  8 Germany   3033
+    ##  9 Spain     2391
+    ## 10 HongKong  1527
+    ## # … with 356 more rows
 
 ``` r
 imdb_country %>%
-  filter(
-    country == c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong-Kong", "Turkey", "Belgium")
-  ) %>%
-  group_by(country) %>%
-  summarise(
-    mean_rating = mean(avg_vote, na.rm = TRUE),
-    median_rating = median(avg_vote, na.rm = TRUE)
-    ) %>%
-  arrange(desc(mean_rating))
+   filter(
+     country == c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
+   ) %>%
+   group_by(country) %>%
+   summarise(
+     mean_rating = mean(avg_vote, na.rm = TRUE),
+     median_rating = median(avg_vote, na.rm = TRUE)
+     ) %>%
+   arrange(desc(mean_rating))
 ```
 
     ## Warning in country == c("USA", "France", "UK", "India", "Italy", "Germany", :
     ## longer object length is not a multiple of shorter object length
 
-    ## # A tibble: 11 × 3
-    ##    country mean_rating median_rating
-    ##    <chr>         <dbl>         <dbl>
-    ##  1 Japan          6.59          6.7 
-    ##  2 Belgium        6.24          6.3 
-    ##  3 France         6.24          6.4 
-    ##  4 Germany        6.17          6.3 
-    ##  5 India          6.14          6.4 
-    ##  6 Italy          6.00          6.15
-    ##  7 UK             5.99          6.2 
-    ##  8 Spain          5.96          6.1 
-    ##  9 Turkey         5.86          6.15
-    ## 10 Canada         5.71          5.9 
-    ## 11 USA            5.61          5.8
+    ## # A tibble: 12 × 3
+    ##    country   mean_rating median_rating
+    ##    <chr>           <dbl>         <dbl>
+    ##  1 Japan            6.52          6.7 
+    ##  2 India            6.28          6.5 
+    ##  3 France           6.26          6.3 
+    ##  4 Hong Kong        6.22          6.5 
+    ##  5 Germany          6.12          6.2 
+    ##  6 Belgium          6.09          6.3 
+    ##  7 Italy            6.05          6.2 
+    ##  8 Spain            5.99          6.1 
+    ##  9 UK               5.91          6.2 
+    ## 10 Turkey           5.86          6.1 
+    ## 11 USA              5.60          5.85
+    ## 12 Canada           5.38          5.6
 
 ``` r
-imdb_country %>%
-  filter(country == c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong-Kong", "Turkey", "Belgium")) %>%
-  ggplot(aes(x = avg_vote, y = country, fill = country)) +
-  geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
-  labs(
-    title = "Distribution of IMDb Average Ratings",
-    subtitle = "for top 12 countries who have produced the most films",
-    x = "Average rating",
-    y = "Country"
-  )
+ imdb_country %>%
+   filter(country == c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")) %>%
+   ggplot(aes(x = avg_vote, y = country, fill = country)) +
+   geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
+   labs(
+     title = "Distribution of IMDb Average Ratings",
+     subtitle = "for top 12 countries who have produced the most films",
+     x = "Average rating",
+     y = "Country"
+   )
 ```
 
     ## Warning in country == c("USA", "France", "UK", "India", "Italy", "Germany", :
     ## longer object length is not a multiple of shorter object length
 
-    ## Picking joint bandwidth of 0.28
+    ## Picking joint bandwidth of 0.308
 
 ![](proposal_files/figure-gfm/data-analysis-country-1.png)<!-- --> After
 filtering for the top 12 countries who produce the largest number of
@@ -282,3 +280,16 @@ imdb %>%
 ![](proposal_files/figure-gfm/data-analysis-duration-1.png)<!-- --> This
 graph reveals there is little to no association between the `avg_vote`
 and `duration` of a movie.
+
+``` r
+imdb %>%
+  separate_rows(language, sep = "\\,") %>%
+  group_by(language) %>%
+  summarise(
+    count = n(),
+    mean = mean(avg_vote)) %>%
+  ggplot(aes(x = count, y = mean, group = language)) +
+  geom_point()
+```
+
+![](proposal_files/figure-gfm/languages-1.png)<!-- -->

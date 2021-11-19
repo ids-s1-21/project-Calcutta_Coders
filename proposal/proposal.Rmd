@@ -27,37 +27,34 @@ The outcome (response, Y) will be the average imdb ratings, The predictor (expla
 
 ```{r data-analysis-country}
 imdb_country <- imdb %>%
-  mutate(country = case_when(
-    country == "Hong Kong" ~ "Hong-Kong",
-    country == "South Korea" ~ "South-Korea",
-    TRUE ~ country)) %>%
-  separate_rows(country)
-  
+   mutate(country = sub("\\ ", "", country)) %>%
+   separate_rows(country, sep = "\\,")
+   
 imdb_country %>%
-  count(country) %>%
-  arrange(desc(n))
-
+   count(country) %>%
+   arrange(desc(n))
+ 
 imdb_country %>%
-  filter(
-    country == c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong-Kong", "Turkey", "Belgium")
-  ) %>%
-  group_by(country) %>%
-  summarise(
-    mean_rating = mean(avg_vote, na.rm = TRUE),
-    median_rating = median(avg_vote, na.rm = TRUE)
-    ) %>%
-  arrange(desc(mean_rating))
-
-imdb_country %>%
-  filter(country == c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong-Kong", "Turkey", "Belgium")) %>%
-  ggplot(aes(x = avg_vote, y = country, fill = country)) +
-  geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
-  labs(
-    title = "Distribution of IMDb Average Ratings",
-    subtitle = "for top 12 countries who have produced the most films",
-    x = "Average rating",
-    y = "Country"
-  )
+   filter(
+     country == c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
+   ) %>%
+   group_by(country) %>%
+   summarise(
+     mean_rating = mean(avg_vote, na.rm = TRUE),
+     median_rating = median(avg_vote, na.rm = TRUE)
+     ) %>%
+   arrange(desc(mean_rating))
+ 
+ imdb_country %>%
+   filter(country == c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")) %>%
+   ggplot(aes(x = avg_vote, y = country, fill = country)) +
+   geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
+   labs(
+     title = "Distribution of IMDb Average Ratings",
+     subtitle = "for top 12 countries who have produced the most films",
+     x = "Average rating",
+     y = "Country"
+   )
 ```
 After filtering for the top 12 countries who produce the largest number of films, the distribution of `avg_vote` is observed. The countries with the higher ratings include Japan, Belgium, France, Germany and India. Even though the USA has the largest number of films produced, their mean rating is the lowest of these countries.
 
@@ -150,3 +147,14 @@ imdb %>%
   )
 ```
 This graph reveals there is little to no association between the `avg_vote` and `duration` of a movie.
+
+```{r languages}
+imdb %>%
+  separate_rows(language, sep = "\\,") %>%
+  group_by(language) %>%
+  summarise(
+    count = n(),
+    mean = mean(avg_vote)) %>%
+  ggplot(aes(x = count, y = mean, group = language)) +
+  geom_point()
+```
