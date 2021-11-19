@@ -1,6 +1,6 @@
 Project proposal
 ================
-Team name
+Calcutta_Coders
 
 ``` r
 library(tidyverse)
@@ -179,7 +179,7 @@ imdb_genre %>%
 graph reveals the distribution of `avg_vote`, which is the rating, for
 every `genre`. As shown by the graph and the summary statistics, some
 high rated genres include Documentary, Film Noir, Biography, History,
-War and News. In these data tables, films with multiple genres were
+War and News. In these data analyses, films with multiple genres were
 counted in each of their catagories.
 
 ``` r
