@@ -1,6 +1,6 @@
 Project proposal
 ================
-Calcutta\_Coders
+Calcutta_Coders
 
 ``` r
 library(tidyverse)

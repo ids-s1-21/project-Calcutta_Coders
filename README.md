@@ -1,6 +1,6 @@
 How does the country a film was made in affect iMDb ratings?
 ================
-Calcutta\_Coders
+Calcutta_Coders
 
 Introduction:
 
