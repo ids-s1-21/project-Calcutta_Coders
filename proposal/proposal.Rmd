@@ -14,6 +14,9 @@ library(ggridges)
 
 Our aim in this project is to find out how iMDb ratings compare for films from different countries. We are using a data set called iMDb movies that has come from kaggle. We will also compare how different variables (title, year published, genre, budget, USA gross income, Worldwide gross income, duration and actors) affect iMDb ratings and also how many votes were cast for a film to recieve said rating.
 
+#Consider?
+Our aim in this project is to find out if there truly is a bias towards films in different languages other then English, if people cant get over the one inch barrier of subtitles. To do this we will mainly use the IMDb ratings to explore this but we will also compare how different variables (title, year published, genre, budget, USA gross income, Worldwide gross income, duration and actors) affect iMDb ratings and also how many votes were cast for a film to recieve said rating.
+
 ## 2. Data
 
 ```{r read-data}
