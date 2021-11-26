@@ -7,6 +7,12 @@ Introduction:
 
 Our aim in this project is to find out how iMDb ratings compare for films from different countries. We are using a data set called iMDb movies that has come from kaggle. The data set was originally from the public iMDb website which shows all the ratings and then this was filtered to only films with more than 100 votes. Each case is a different flim for this data set. We will also compare how different variables (title, year published, genre, budget, USA gross income, Worldwide gross income, duration and actors) affect iMDb ratings and also how many votes were cast for a film to recieve said rating. 
 
+Data analysis plan:
+
+The outcome (response, Y) will be the average imdb ratings, The predictor (explanatory, X) will be country. To properly explore these realtionships we will use gross and worlwide income to see if the movie did well worldwide or just in the us, we can also ...
+
+We will use comparison groups such as worldwide gross to see if this film sold well worldwide or just in the US, if it did well worldwide 
+
 ## Summary
 
 Write-up of your project and findings go here. 
@@ -23,7 +29,9 @@ And make sure to hide your code with  `echo = FALSE` unless the point you are tr
 Your results with proper output and graphics go in your presentation, this space is for a brief summary of your project.
 
 ```{r load-data, echo = FALSE}
-# load data here, if you like
+library(tidyverse)
+imdb <- read.csv(file = "data/IMDb_movies.csv", header = TRUE, skip = 1)
+head(imdb)
 ```
 
 ## Presentation
