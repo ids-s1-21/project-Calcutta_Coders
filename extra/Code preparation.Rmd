@@ -1,0 +1,128 @@
+---
+title: "Code plan / presentation plan"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-packages, message = FALSE}
+library(tidyverse)
+library(broom)
+library(ggridges)
+```
+
+```{r read-data}
+imdb <- read.csv(file = "../data/IMDb_movies.csv", header = TRUE, skip = 1, na.strings = c("NA", "", "None"))
+imdb2019 <- read.csv(file = "../data/imdb-merge.csv")
+glimpse(imdb)
+```
+
+```{r data-analysis-country}
+imdb_country <- imdb %>%
+   mutate(country = sub("\\ ", "", country)) %>%
+   separate_rows(country, sep = "\\,")
+   
+imdb_country %>%
+   count(country) %>%
+   arrange(desc(n))
+ 
+imdb_country %>%
+   filter(
+     country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
+   ) %>%
+   group_by(country) %>%
+   summarise(
+     mean_rating = mean(avg_vote, na.rm = TRUE),
+     median_rating = median(avg_vote, na.rm = TRUE)
+     ) %>%
+   arrange(desc(mean_rating))
+ 
+ imdb_country %>%
+   filter(country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")) %>%
+   ggplot(aes(x = avg_vote, y = country, fill = country)) +
+   geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
+   labs(
+     title = "Distribution of IMDb Average Ratings",
+     subtitle = "for top 12 countries who have produced the most films",
+     x = "Average rating",
+     y = "Country"
+   )
+```
+
+```{r data-analysis-language}
+imdb_language <- imdb %>%
+   mutate(language = sub("\\ ", "", language)) %>%
+   separate_rows(language, sep = "\\,")
+   
+imdb_language %>%
+   count(language) %>%
+   arrange(desc(n))
+
+imdb_language %>%
+   filter(language %in% c("English", "French", "Spanish", "Italian", "German", "Japanese", "Hindi", "Russian", "Mandarin", "Turkish", "Cantonese", "Korean")) %>%
+   group_by(language) %>%
+   summarise(
+     mean_rating = mean(avg_vote, na.rm = TRUE),
+     median_rating = median(avg_vote, na.rm = TRUE)
+     ) %>%
+   arrange(desc(mean_rating))
+ 
+ imdb_language %>%
+   filter(language %in% c("English", "French", "Spanish", "Italian", "German", "Japanese", "Hindi", "Russian", "Mandarin", "Turkish", "Cantonese", "Korean")) %>%
+   ggplot(aes(x = avg_vote, y = language, fill = language)) +
+   geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
+   labs(
+     title = "Distribution of IMDb Average Ratings",
+     subtitle = "for top 12 languages who have the films",
+     x = "Average rating",
+     y = "Language"
+   )
+```
+
+
+```{r data-analysis-language-US-votes}
+glimpse(imdb2019)
+  
+imdb2019_lang <- imdb2019 %>%
+  mutate(
+    language = sub("\\ ", "", language),
+    us_votes = as.numeric(str_remove_all(us_votes, "\n|\\,")),
+    non_us_votes = as.numeric(str_remove_all(non_us_votes, "\n|\\,")),
+    prop_us_votes = us_votes/(us_votes + non_us_votes)
+    ) %>%
+  separate_rows(language, sep = "\\,") 
+
+imdb2019_lang %>%
+  filter(language %in% c("English", "French", "Spanish", "Italian", "German", "Japanese", "Hindi", "Russian", "Mandarin", "Turkish", "Cantonese", "Korean")) %>%
+  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating") %>%
+  ggplot(aes(x = rating, fill = us_or_not)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ language)
+
+```
+```{r data-analysis-country}
+imdb2019_lang %>%
+  filter(country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")) %>%
+  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating") %>%
+  ggplot(aes(x = rating, fill = us_or_not)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ country)
+```
+
+```{r data-analysis-prop-us}
+imdb2019_lang %>%
+  filter(language %in% c("English", "French", "Spanish", "Italian", "German", "Japanese", "Hindi", "Russian", "Mandarin", "Turkish", "Cantonese", "Korean")) %>%
+  ggplot(aes(x = prop_us_votes, y = avg_vote, color = language)) +
+  geom_point(alpha = 0.3) +
+  facet_wrap(~language)
+```
+```{r data-analysis-prop-us-country}
+imdb2019_lang %>%
+  filter(country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")) %>%
+  ggplot(aes(x = prop_us_votes, y = avg_vote, color = country)) +
+  geom_point(alpha = 0.3) +
+  facet_wrap(~country)
+```
+```

@@ -1,0 +1,24 @@
+---
+title: "tidydata"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-data}
+imdb_user2019 <- read.csv(file = "../data/imdb-user-ratings.csv", na.strings = c("NA", "-"))
+imdb <- read.csv(file = "../data/IMDb_movies.csv", header = TRUE, skip = 1, na.strings = c("NA", "", "None"))
+```
+
+```{r merge-data}
+imdb_user2019 <- imdb_user2019 %>%
+  mutate(id = sub("\\/", "", id))
+
+imdb2019 <- merge(imdb_user2019, imdb, by.x = "id", by.y = "imdb_title_id")
+```
+
+```{r write-data}
+write_csv(imdb2019, path = "../data/imdb-merge.csv")
+```
