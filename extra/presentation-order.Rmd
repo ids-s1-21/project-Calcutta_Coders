@@ -1,0 +1,16 @@
+---
+title: "presentation_order"
+output: html_document
+---
+
+title
+source
+distribution of avg_vot
+distribution of avg_vot for languages
+distribution of us_vote/non_us_vote for languages
+avg_vote vs. prop_us_voters
+Genre: USA, Japan, France (distribution of genre in each country; filter for us_votes, discrete regression vote vs. genre)
+avg_vote vs. World wide gross income
+voting (us_or_not) vs. world_wide_gross
+distribution of world_wide_gross income and us_gross_income for countries
+

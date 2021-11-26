@@ -123,7 +123,8 @@ imdb_income %>%
     title = "Worldwide Gross Income vs. Average Rating",
     x = "Worldwide Gross Income",
     y = "Average Rating"
-  )
+  ) +
+  stat_smooth(method = "lm", se = FALSE)
 ```
 This graph explores the relationship between the `avg_vote` and `worlwide_gross_income`. This graph has a weak positive association suggesting that the more money that is gained from the film, the more likely the film is to be rated well.
 
