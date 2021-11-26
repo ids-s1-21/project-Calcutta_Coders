@@ -1,7 +1,6 @@
 ---
-title: "Presentation title"
-subtitle: <font size='6'>Presentation subtitle (if any)</font>
-author: <font size='8'>Team name <br> Names of team members</font>
+title: "Are US IMDb users biased against foreign movies? "
+author: <font size='8'>Calcutta Coders <br> Grace South, Fletcher Adams and Mark Corray</font>
 institute: <font size='10'>University of Edinburgh</font>
 date: <font size = '6'>`r Sys.Date()`</font>
 output:
