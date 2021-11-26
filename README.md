@@ -1,11 +1,24 @@
 How does the country a film was made in affect iMDb ratings?
 ================
+<<<<<<< HEAD
+Calcutta\_Coders
+=======
 Calcutta_Coders
+>>>>>>> a1434509f4ba0f6b19580399deb2efd929c9a4a9
 
 Introduction:
 
 Our aim in this project is to find out how iMDb ratings compare for
 films from different countries. We are using a data set called iMDb
+<<<<<<< HEAD
+movies that has come from kaggle. The data set was orignally from the
+public iMDb website which shows all the ratings and then this was
+filtered to only films with more than 100 votes. Each case is a
+different flim for this data set. We will also compare how different
+variables (title, year published, genre, budget, USA gross income,
+Worldwide gross income, duration and actors) affect iMDb ratings and
+also how many votes were cast for a film to recieve said rating.
+=======
 movies that has come from kaggle. We will also compare how different
 variables (title, year published, genre, budget, USA gross income,
 Worldwide gross income, duration and actors) affect iMDb ratings and
@@ -20,6 +33,7 @@ did well worldwide or just in the us, we can also …
 
 We will use comparison groups such as worldwide gross to see if this
 film sold well worldwide or just in the US, if it did well worldwide
+>>>>>>> a1434509f4ba0f6b19580399deb2efd929c9a4a9
 
 ## Summary
 
