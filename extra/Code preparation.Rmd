@@ -15,7 +15,7 @@ library(ggridges)
 
 ```{r read-data}
 imdb <- read.csv(file = "../data/IMDb_movies.csv", header = TRUE, skip = 1, na.strings = c("NA", "", "None"))
-imdb2015 <- read.csv(file = "../data/imdb-merge.csv")
+imdb2000 <- read.csv(file = "../data/imdb-merge.csv")
 glimpse(imdb)
 ```
 
@@ -83,9 +83,9 @@ imdb_language %>%
 
 
 ```{r data-analysis-language-US-votes}
-glimpse(imdb2019)
+glimpse(imdb2000)
   
-imdb2019_lang <- imdb2019 %>%
+imdb2000_lang <- imdb2000 %>%
   mutate(
     language = sub("\\ ", "", language),
     us_votes = as.numeric(str_remove_all(us_votes, "\n|\\,")),
@@ -94,7 +94,7 @@ imdb2019_lang <- imdb2019 %>%
     ) %>%
   separate_rows(language, sep = "\\,") 
 
-imdb2019_lang %>%
+imdb2000_lang %>%
   filter(language %in% c("English", "French", "Spanish", "Italian", "German", "Japanese", "Hindi", "Russian", "Mandarin", "Turkish", "Cantonese", "Korean")) %>%
   pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating") %>%
   ggplot(aes(x = rating, fill = us_or_not)) +
@@ -103,7 +103,7 @@ imdb2019_lang %>%
 
 ```
 ```{r data-analysis-country}
-imdb2019_lang %>%
+imdb2000_lang %>%
   filter(country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")) %>%
   pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating") %>%
   ggplot(aes(x = rating, fill = us_or_not)) +
@@ -112,7 +112,7 @@ imdb2019_lang %>%
 ```
 
 ```{r data-analysis-prop-us}
-imdb2019_lang %>%
+imdb2000_lang %>%
   filter(language %in% c("English", "French", "Spanish", "Italian", "German", "Japanese", "Hindi", "Russian", "Mandarin", "Turkish", "Cantonese", "Korean")) %>%
   ggplot(aes(x = prop_us_votes, y = avg_vote, color = language)) +
   geom_point(alpha = 0.3) +
@@ -120,7 +120,7 @@ imdb2019_lang %>%
   facet_wrap(~language)
 ```
 ```{r data-analysis-prop-us-country}
-imdb2019_lang %>%
+imdb2000_lang %>%
   filter(country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")) %>%
   ggplot(aes(x = prop_us_votes, y = avg_vote, color = country)) +
   geom_point(alpha = 0.3) +
@@ -129,7 +129,7 @@ imdb2019_lang %>%
 ```
 
 ```{r data-analysis-income}
-imdb_income_lang <- imdb2019_lang %>%
+imdb_income_lang <- imdb2000_lang %>%
   filter(language %in% c("English", "French", "Spanish", "Italian", "German", "Japanese", "Hindi", "Russian", "Mandarin", "Turkish", "Cantonese", "Korean")) %>%
   pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating") %>%
   mutate( 
