@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 imdb_user2019 <- read.csv(file = "../data/imdb-user-ratings.csv", na.strings = c("NA", "-"))
 imdb_user2015 <- read.csv(file = "../data/imdb-user-ratings2.csv", na.strings = c("NA", "-"))
 imdb_user2000 <- read.csv(file = "../data/imdb-user-ratings3.csv", na.strings = c("NA", "-"))
+imdb_user1995 <- read.csv(file = "../data/imdb-user-ratings4.csv", na.strings = c("NA", "-"))
 imdb <- read.csv(file = "../data/IMDb_movies.csv", header = TRUE, skip = 1, na.strings = c("NA", "", "None"))
 ```
 
@@ -21,12 +22,15 @@ imdb_user2015 <- imdb_user2015 %>%
   mutate(id = sub("\\/", "", id))
 imdb_user2000 <- imdb_user2000 %>%
   mutate(id = sub("\\/", "", id))
+imdb_user1995 <- imdb_user2000 %>%
+  mutate(id = sub("\\/", "", id))
 imdb_user <- rbind(imdb_user2019, imdb_user2015)
 imdb_user1 <- rbind(imdb_user, imdb_user2000)
+imdb_user2 <- rbind(imdb_user1, imdb_user1995)
 
-imdb2000 <- merge(imdb_user1, imdb, by.x = "id", by.y = "imdb_title_id")
+imdb1995 <- merge(imdb_user2, imdb, by.x = "id", by.y = "imdb_title_id")
 ```
 
 ```{r write-data}
-write_csv(imdb2000, path = "../data/imdb-merge.csv")
+write_csv(imdb1995, path = "../data/imdb-merge.csv")
 ```
