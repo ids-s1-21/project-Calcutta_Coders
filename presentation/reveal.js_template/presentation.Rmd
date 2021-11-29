@@ -28,7 +28,7 @@ knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618,
 # Load your data here
 ```
 
-## A statement of the overall goal / research question {data-background-image="img/confetti.jpg"}
+## To answer the research question posed on the first slide we will be using the country of origin, genre, us votes and non us votes and US and non US income for the films rated on IMDb. {data-background-image="img/confetti.jpg"}
 
 # Section title
 
