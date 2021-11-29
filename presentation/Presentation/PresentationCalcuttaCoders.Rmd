@@ -16,10 +16,17 @@ library(tidymodels)
 library(palmerpenguins)
 library(knitr)
 library(revealjs)
+library(broom)
+library(ggridges)
 
 knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618, out.width = "80%")
 ```
 
+
+```{r read-data}
+imdb <- read.csv(file = "../data/IMDb_movies.csv", header = TRUE, skip = 1)
+glimpse(imdb)
+```
 ## R Markdown
 
 This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
@@ -35,12 +42,47 @@ When you click the **Knit** button a document will be generated that includes bo
 ## Slide with R Output
 
 ```{r cars, echo = TRUE}
-summary(cars)
+imdb %>%
+  ggplot(aes(x = votes, y = avg_vote)) +
+  geom_point(alpha = 0.1) +
+  labs(
+    title = "Average Rating Based on the Popularity of Movie",
+    x = "Number of Votes",
+    y = "Average Rating"
+  )
 ```
 
 ## Slide with Plot
 
 ```{r pressure}
-plot(pressure)
+imdb_country <- imdb %>%
+   mutate(country = sub("\\ ", "", country)) %>%
+   separate_rows(country, sep = "\\,")
+   
+imdb_country %>%
+   count(country) %>%
+   arrange(desc(n))
+ 
+imdb_country %>%
+   filter(
+     country == c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
+   ) %>%
+   group_by(country) %>%
+   summarise(
+     mean_rating = mean(avg_vote, na.rm = TRUE),
+     median_rating = median(avg_vote, na.rm = TRUE)
+     ) %>%
+   arrange(desc(mean_rating))
+ 
+ imdb_country %>%
+   filter(country == c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")) %>%
+   ggplot(aes(x = avg_vote, y = country, fill = country)) +
+   geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
+   labs(
+     title = "Distribution of IMDb Average Ratings",
+     subtitle = "for top 12 countries who have produced the most films",
+     x = "Average rating",
+     y = "Country"
+   )
 ```
 
