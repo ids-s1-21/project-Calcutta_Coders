@@ -247,8 +247,13 @@ imdb_income %>%
     title = "Worldwide Gross Income vs. Average Rating",
     x = "Worldwide Gross Income",
     y = "Average Rating"
-  )
+  ) +
+  stat_smooth(method = "lm", se = FALSE)
 ```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+    ## Warning: Removed 54900 rows containing non-finite values (stat_smooth).
 
     ## Warning: Removed 54900 rows containing missing values (geom_point).
 
