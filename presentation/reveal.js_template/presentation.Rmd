@@ -3,9 +3,15 @@ title: "Are US IMDb users biased against foreign movies? "
 author: <font size='8'>Calcutta Coders <br> Grace South, Fletcher Adams and Mark Corray</font>
 institute: <font size='10'>University of Edinburgh</font>
 date: <font size = '6'>`r Sys.Date()`</font>
+<<<<<<< HEAD
   output:
+=======
+output:
+>>>>>>> acb6716b2a769fa70a1f4deeb8c7876df2a97e02
   revealjs::revealjs_presentation:
     self_contained: false
+`{data-background-image= "img/Kurosawa.jpg">}`
+---
 ---
 
 ```{r load-packages, include = FALSE}

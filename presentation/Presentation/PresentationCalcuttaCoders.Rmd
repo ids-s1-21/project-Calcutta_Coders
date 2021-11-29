@@ -3,9 +3,10 @@ title: "Are US IMDb users biased against foreign movies? "
 author: <font size='8'>Calcutta Coders <br> Grace South, Fletcher Adams and Mark Corray</font>
 institute: <font size='10'>University of Edinburgh</font>
 date: <font size = '6'>`r Sys.Date()`</font>
-  output:
+output:
   revealjs::revealjs_presentation:
     self_contained: false
+---
 ---
 
 ```{r setup, include=FALSE}
@@ -15,6 +16,7 @@ library(tidymodels)
 library(palmerpenguins)
 library(knitr)
 library(revealjs)
+
 knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618, out.width = "80%")
 ```
 
