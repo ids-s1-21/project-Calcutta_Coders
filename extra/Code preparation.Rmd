@@ -15,7 +15,7 @@ library(ggridges)
 
 ```{r read-data}
 imdb <- read.csv(file = "../data/IMDb_movies.csv", header = TRUE, skip = 1, na.strings = c("NA", "", "None"))
-imdb2019 <- read.csv(file = "../data/imdb-merge.csv")
+imdb2015 <- read.csv(file = "../data/imdb-merge.csv")
 glimpse(imdb)
 ```
 

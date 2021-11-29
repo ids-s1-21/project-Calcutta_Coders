@@ -21,7 +21,7 @@ library(ggridges)
 library(here)
 ```
 
-```{r chunk-output}
+```{r chunk-output, include = FALSE}
 knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618, out.width = "80%")
 ```
 

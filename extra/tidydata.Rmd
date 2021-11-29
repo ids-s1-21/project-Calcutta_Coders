@@ -9,14 +9,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r load-data}
 imdb_user2019 <- read.csv(file = "../data/imdb-user-ratings.csv", na.strings = c("NA", "-"))
+imdb_user2015 <- read.csv(file = "../data/imdb-user-ratings2.csv", na.strings = c("NA", "-"))
 imdb <- read.csv(file = "../data/IMDb_movies.csv", header = TRUE, skip = 1, na.strings = c("NA", "", "None"))
 ```
 
 ```{r merge-data}
 imdb_user2019 <- imdb_user2019 %>%
   mutate(id = sub("\\/", "", id))
+imdb_user2015 <- imdb_user2015 %>%
+  mutate(id = sub("\\/", "", id))
+imdb_user <- rbind(imdb_user2019, imdb_user2015)
 
-imdb2019 <- merge(imdb_user2019, imdb, by.x = "id", by.y = "imdb_title_id")
+imdb2019 <- merge(imdb_user, imdb, by.x = "id", by.y = "imdb_title_id")
 ```
 
 ```{r write-data}
