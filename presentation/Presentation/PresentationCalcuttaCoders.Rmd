@@ -1,0 +1,123 @@
+---
+title: "Are Subtitles a One-Inch Barrier for American IMDb users?" 
+author: <font size='8'>Calcutta Coders <br> Grace South, Fletcher Adams and Mark Corray</font>
+institute: <font size='10'>University of Edinburgh</font>
+date: <font size = '6'>`r Sys.Date()`</font>
+output:
+  revealjs::revealjs_presentation:
+    self_contained: false
+---
+---
+
+```{r setup, include=FALSE}
+library(rmarkdown)
+library(tidyverse)
+library(tidymodels)
+library(palmerpenguins)
+library(knitr)
+library(revealjs)
+library(broom)
+library(ggridges)
+library(here)
+library(gt)
+```
+
+```{r chunk-output, include = FALSE}
+knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618, out.width = "80%")
+```
+
+
+```{r read-data, include = FALSE}
+imdb <- read.csv(file = here("data/IMDb_movies.csv"), header = TRUE, skip = 1, na.strings = c("NA", "", "None"))
+imdb1990 <- read.csv(file = here("data/imdb-merge.csv"))
+```
+## Are US IMDb users biased against foreign movies?
+- Investigating how the average rating of US and non-US users is influenced by country of production
+- Exploring the influence of other variables including genre and income (US or worldwide) have on this relationship
+
+{data-background-image="img/confetti.jpg"}
+
+## Average Rating
+
+```{r average-rating, echo = FALSE}
+imdb %>%
+  ggplot(aes(x = avg_vote)) +
+  geom_histogram(binwidth = 0.5) +
+  labs(
+    title = "Distribution of Average Rating",
+    x = "Average Rating",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+```
+
+## Average Rating by Country
+
+```{r average-rating-country-table, echo = FALSE}
+imdb_country <- imdb %>%
+  mutate(country = sub("\\ ", "", country)) %>%
+  separate_rows(country, sep = "\\,") %>%
+  mutate(country = case_when(
+    country == "HongKong" ~ "Hong Kong",
+    TRUE ~ country)) %>%
+  filter(
+     country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
+   )
+
+imdb_country %>%
+  group_by(country) %>%
+  summarise(
+    mean_rating = mean(avg_vote, na.rm = TRUE),
+    median_rating = median(avg_vote, na.rm = TRUE)
+    ) %>%
+  arrange(desc(mean_rating)) %>%
+  gt() %>%
+  cols_label(
+    country = "Country",
+    mean_rating = "Mean Rating",
+    median_rating = "Median Rating"
+  )
+```
+
+## Average Rating by Country
+
+```{r average-rating-country, echo = FALSE}
+imdb_country %>%
+  ggplot(aes(x = avg_vote, y = country, fill = country)) +
+  geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
+  labs(
+    title = "Distribution of IMDb Average Ratings",
+    subtitle = "for top 12 countries who have produced the most films",
+    x = "Average rating",
+    y = NULL
+  ) +
+  theme_minimal()
+```
+
+## Comparison of US vs. non-US users average rating by country 
+
+```{r country-us-rating, echo = FALSE}
+imdb1990_country <- imdb1990 %>%
+  separate_rows(country, sep = "\\,") %>%
+  mutate(country = case_when(
+    country == "HongKong" ~ "Hong Kong",
+    TRUE ~ country
+  )) %>%
+  filter(
+     country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
+   ) %>%
+  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
+
+imdb1990_country %>%
+  ggplot(aes(x = rating, fill = us_or_not)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ country) +
+  labs(
+    title = "Average Rating by US or non-US users",
+    subtitle = "by country",
+    x = "Average Rating",
+    y = "Density",
+    fill = NULL
+  ) +
+  theme_minimal()
+```

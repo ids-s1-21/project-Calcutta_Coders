@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Calcutta Coders   Grace South, Fletcher Adams and Mark Corray" />
+  <meta name="dcterms.date" content="2021-11-30" />
+  <title>Are Subtitles a One-Inch Barrier for American IMDb users?</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="PresentationCalcuttaCoders_files/reveal.js-4.1.2/dist/reset.css">
+  <link rel="stylesheet" href="PresentationCalcuttaCoders_files/reveal.js-4.1.2/dist/reveal.css">
+
+  <style type="text/css">
+    /* CSS from pandoc style.html() */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+                  </style>
+
+  <link rel="stylesheet" href="PresentationCalcuttaCoders_files/reveal.js-4.1.2/dist/theme/simple.css" id="theme">
+
+
+  <style type="text/css">
+  /* some tweaks to reveal css */
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+  </style>
+
+    <script src="PresentationCalcuttaCoders_files/header-attrs-2.11/header-attrs.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Are Subtitles a One-Inch Barrier for American IMDb users?</h1>
+  <h2 class="author"><font size='8'>Calcutta Coders <br> Grace South, Fletcher Adams and Mark Corray</font></h2>
+  <h3 class="institute"><font size='10'>University of Edinburgh</font></h2>
+  <h3 class="date"><font size = '6'>2021-11-30</font></h3>
+</section>
+
+<section id="are-us-imdb-users-biased-against-foreign-movies" class="slide level2">
+<h2>Are US IMDb users biased against foreign movies?</h2>
+<ul>
+<li>Investigating how the average rating of US and non-US users is influenced by country of production</li>
+<li>Exploring the influence of other variables including genre and income (US or worldwide) have on this relationship</li>
+</ul>
+<p>{data-background-image=“img/confetti.jpg”}</p>
+</section>
+<section id="average-rating" class="slide level2">
+<h2>Average Rating</h2>
+<p><img src="PresentationCalcuttaCoders_files/figure-revealjs/average-rating-1.png" width="80%" /></p>
+</section>
+<section id="average-rating-by-country" class="slide level2">
+<h2>Average Rating by Country</h2>
+<div id="scnhqskvsl" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#scnhqskvsl .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#scnhqskvsl .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#scnhqskvsl .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#scnhqskvsl .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#scnhqskvsl .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#scnhqskvsl .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#scnhqskvsl .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#scnhqskvsl .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#scnhqskvsl .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#scnhqskvsl .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#scnhqskvsl .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#scnhqskvsl .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#scnhqskvsl .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#scnhqskvsl .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#scnhqskvsl .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#scnhqskvsl .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#scnhqskvsl .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#scnhqskvsl .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#scnhqskvsl .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#scnhqskvsl .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#scnhqskvsl .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#scnhqskvsl .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#scnhqskvsl .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#scnhqskvsl .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#scnhqskvsl .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#scnhqskvsl .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#scnhqskvsl .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#scnhqskvsl .gt_left {
+  text-align: left;
+}
+
+#scnhqskvsl .gt_center {
+  text-align: center;
+}
+
+#scnhqskvsl .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#scnhqskvsl .gt_font_normal {
+  font-weight: normal;
+}
+
+#scnhqskvsl .gt_font_bold {
+  font-weight: bold;
+}
+
+#scnhqskvsl .gt_font_italic {
+  font-style: italic;
+}
+
+#scnhqskvsl .gt_super {
+  font-size: 65%;
+}
+
+#scnhqskvsl .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 65%;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Country</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">Mean Rating</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">Median Rating</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td class="gt_row gt_left">Japan</td>
+<td class="gt_row gt_right">6.492455</td>
+<td class="gt_row gt_right">6.7</td></tr>
+    <tr><td class="gt_row gt_left">France</td>
+<td class="gt_row gt_right">6.231272</td>
+<td class="gt_row gt_right">6.3</td></tr>
+    <tr><td class="gt_row gt_left">India</td>
+<td class="gt_row gt_right">6.219051</td>
+<td class="gt_row gt_right">6.5</td></tr>
+    <tr><td class="gt_row gt_left">Belgium</td>
+<td class="gt_row gt_right">6.091697</td>
+<td class="gt_row gt_right">6.2</td></tr>
+    <tr><td class="gt_row gt_left">Hong Kong</td>
+<td class="gt_row gt_right">6.069444</td>
+<td class="gt_row gt_right">6.2</td></tr>
+    <tr><td class="gt_row gt_left">Germany</td>
+<td class="gt_row gt_right">6.030531</td>
+<td class="gt_row gt_right">6.2</td></tr>
+    <tr><td class="gt_row gt_left">Italy</td>
+<td class="gt_row gt_right">5.977934</td>
+<td class="gt_row gt_right">6.1</td></tr>
+    <tr><td class="gt_row gt_left">UK</td>
+<td class="gt_row gt_right">5.924533</td>
+<td class="gt_row gt_right">6.1</td></tr>
+    <tr><td class="gt_row gt_left">Turkey</td>
+<td class="gt_row gt_right">5.861030</td>
+<td class="gt_row gt_right">6.1</td></tr>
+    <tr><td class="gt_row gt_left">Spain</td>
+<td class="gt_row gt_right">5.852447</td>
+<td class="gt_row gt_right">6.0</td></tr>
+    <tr><td class="gt_row gt_left">USA</td>
+<td class="gt_row gt_right">5.596118</td>
+<td class="gt_row gt_right">5.8</td></tr>
+    <tr><td class="gt_row gt_left">Canada</td>
+<td class="gt_row gt_right">5.524864</td>
+<td class="gt_row gt_right">5.7</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</section>
+<section id="average-rating-by-country-1" class="slide level2">
+<h2>Average Rating by Country</h2>
+<pre><code>## Picking joint bandwidth of 0.178</code></pre>
+<p><img src="PresentationCalcuttaCoders_files/figure-revealjs/average-rating-country-1.png" width="80%" /></p>
+</section>
+    </div>
+  </div>
+
+  <script src="PresentationCalcuttaCoders_files/reveal.js-4.1.2/dist/reveal.js"></script>
+  
+  <!-- reveal.js plugins -->
+  
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: false,
+        // Can be used to limit the contexts in which the slide number appears
+        showSlideNumber: 'all',
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: false,
+          // Use 1 based indexing for # links to match slide number (default is zero
+        // based)
+        hashOneBasedIndex: false,
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+        // Push each slide change to the browser history
+        // Implies `hash: true`
+        history: true,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+  // Disables the default reveal.js slide layout (scaling and centering)
+  // so that you can use custom CSS layout
+  disableLayout: false,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // Loop the presentation
+        loop: false,
+        // Change the presentation direction to be RTL
+        rtl: false,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+        // Transition style
+        transition: 'convex', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The display mode that will be used to show slides
+        display: 'block',
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+
+
+        // Optional reveal.js plugins
+        plugins: [
+        ]
+      });
+
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>

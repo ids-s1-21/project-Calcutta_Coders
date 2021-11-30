@@ -22,6 +22,7 @@ library(tidymodels)
 library(palmerpenguins)
 library(knitr)
 library(xaringanthemer)
+library(here)
 ```
 
 ```{r setup, include=FALSE}
@@ -30,7 +31,8 @@ knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618,
 ```
 
 ```{r load-data, include=FALSE}
-# Load your data here
+imdb <- read.csv(file = here("data/IMDb_movies.csv"), header = TRUE, skip = 1, na.strings = c("NA", "", "None"))
+imdb2019 <- read.csv(file = here("data/imdb-merge.csv"))
 ```
 
 ```{r include=FALSE}
