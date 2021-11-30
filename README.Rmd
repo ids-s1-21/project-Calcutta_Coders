@@ -14,6 +14,70 @@ The outcome (response, Y) will be the average imdb ratings, The predictor (expla
 We will use comparison groups such as worldwide gross to see if this film sold well worldwide or just in the US, if it did well worldwide 
 
 ## Summary
+To start with we will look at the spread of the general ratings on IMDb.
+```{r average-rating, echo = FALSE}
+imdb %>%
+  ggplot(aes(x = avg_vote)) +
+  geom_histogram(binwidth = 0.5) +
+  labs(
+    title = "Distribution of Average Rating",
+    x = "Average Rating",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+```
+From the graph we can see that there is a decently large left skew, showing that most movies are rated above average on IMDb.
+
+Next if we look at the average ratings per country we can start to build up an understanding of how films produced in different countries compare with there average IMDbs ratings.
+```{r average-rating-country-table, echo = FALSE}
+imdb_country <- imdb %>%
+  mutate(country = sub("\\ ", "", country)) %>%
+  separate_rows(country, sep = "\\,") %>%
+  mutate(country = case_when(
+    country == "HongKong" ~ "Hong Kong",
+    TRUE ~ country)) %>%
+  filter(
+     country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
+   )
+
+imdb_country %>%
+  group_by(country) %>%
+  summarise(
+    mean_rating = mean(avg_vote, na.rm = TRUE),
+    median_rating = median(avg_vote, na.rm = TRUE)
+    ) %>%
+  arrange(desc(mean_rating)) %>%
+  gt() %>%
+  cols_label(
+    country = "Country",
+    mean_rating = "Mean Rating",
+    median_rating = "Median Rating"
+  )
+```
+From this we can see that Japan and India have by far the highest average rating, with the US and Canada having a considerably lower rating.
+
+Lets now look at whether these ratings are similar to the US ratiings or not
+-US ratings graph,
+
+
+
+
+We can now look at some different variables which might be able to explain these differences.
+
+Firstly lets see if its the genre of films that the country is producing which is causing the discrepancy's.
+To do this lets first see which genres tend to be the worst rated by americans or by the world..
+-Graph
+Now lets see which are the top genres for each country
+
+Finally to be decisive lets see how the net incomes of films produced in each country varies with income in america and overall. if we notice a difference between how well a film does internationally and in america this may suggest that Americans aren't recommending the film to their friends via word of mouth and this is effecting the general income for the film.
+
+
+
+
+In conclusion we can see that...
+
+
+
 
 Write-up of your project and findings go here. 
 Think of this as the text of your presentation. 
