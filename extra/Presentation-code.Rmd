@@ -124,3 +124,22 @@ imdb1990_genre %>%
     y = "Genre"
   )
 ```
+
+```{r top-genre, include = FALSE}
+imdb1990_genre %>%
+  filter(country == "Italy") %>%
+  group_by(genre) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n))
+imdb1990_genre %>%
+  filter(country == "Japan") %>%
+  group_by(genre) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n))
+imdb1990_genre %>%
+  filter(country == "USA") %>%
+  group_by(genre) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n))
+
+```
