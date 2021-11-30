@@ -5,15 +5,17 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
 ```
 
 ```{r load-data}
-imdb_user2019 <- read.csv(file = "../data/imdb-user-ratings.csv", na.strings = c("NA", "-"))
-imdb_user2015 <- read.csv(file = "../data/imdb-user-ratings2.csv", na.strings = c("NA", "-"))
-imdb_user2000 <- read.csv(file = "../data/imdb-user-ratings3.csv", na.strings = c("NA", "-"))
-imdb_user1995 <- read.csv(file = "../data/imdb-user-ratings4.csv", na.strings = c("NA", "-"))
-imdb_user1990 <- read.csv(file = "../data/imdb-user-ratings5.csv", na.strings = c("NA", "-"))
-imdb <- read.csv(file = "../data/IMDb_movies.csv", header = TRUE, skip = 1, na.strings = c("NA", "", "None"))
+imdb_user2019 <- read.csv(file = here("data/imdb-user-ratings.csv"), na.strings = c("NA", "-"))
+imdb_user2015 <- read.csv(file = here("data/imdb-user-ratings2.csv"), na.strings = c("NA", "-"))
+imdb_user2000 <- read.csv(file = here("data/imdb-user-ratings3.csv"), na.strings = c("NA", "-"))
+imdb_user1995 <- read.csv(file = here("data/imdb-user-ratings4.csv"), na.strings = c("NA", "-"))
+imdb_user1990 <- read.csv(file = here("data/imdb-user-ratings5.csv"), na.strings = c("NA", "-"))
+imdb <- read.csv(file = here("data/IMDb_movies.csv"), header = TRUE, skip = 1, na.strings = c("NA", "", "None"))
 ```
 
 ```{r merge-data}
@@ -33,8 +35,16 @@ imdb_user2 <- rbind(imdb_user1, imdb_user1995)
 imdb_user3 <- rbind(imdb_user2, imdb_user1990)
 
 imdb1990 <- merge(imdb_user3, imdb, by.x = "id", by.y = "imdb_title_id")
+
+imdb1990 <- imdb1990 %>%
+  mutate(
+    country = sub("\\ ", "", country),
+    us_votes = as.numeric(str_remove_all(us_votes, "\n|\\,")),
+    non_us_votes = as.numeric(str_remove_all(non_us_votes, "\n|\\,")),
+    prop_us_votes = us_votes/(us_votes + non_us_votes)
+    )
 ```
 
 ```{r write-data}
-write_csv(imdb1990, path = "../data/imdb-merge.csv")
+write_csv(imdb1990, path = here("data/imdb-merge.csv"))
 ```
