@@ -35,8 +35,6 @@ imdb1990 <- read.csv(file = here("data/imdb-merge.csv"))
 - Investigating how the average rating of US and non-US users is influenced by country of production
 - Exploring the influence of other variables including genre and income (US or worldwide) have on this relationship
 
-{data-background-image="img/confetti.jpg"}
-
 ## Average Rating
 
 ```{r average-rating, echo = FALSE}
@@ -96,7 +94,7 @@ imdb_country %>%
 
 ## Comparison of US vs. non-US users average rating by country 
 
-```{r country-us-rating, echo = FALSE}
+```{r country-us-rating, echo = FALSE, warning = FALSE}
 imdb1990_country <- imdb1990 %>%
   separate_rows(country, sep = "\\,") %>%
   mutate(country = case_when(
@@ -105,10 +103,12 @@ imdb1990_country <- imdb1990 %>%
   )) %>%
   filter(
      country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
-   ) %>%
+   ) 
+
+imdb1990_country_longer <- imdb1990_country %>%
   pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
 
-imdb1990_country %>%
+imdb1990_country_longer %>%
   ggplot(aes(x = rating, fill = us_or_not)) +
   geom_density(alpha = 0.5) +
   facet_wrap(~ country) +
@@ -121,3 +121,13 @@ imdb1990_country %>%
   ) +
   theme_minimal()
 ```
+
+
+<<<<<<< HEAD
+## Top Genres for each Country
+
+## Which Genres Do americans think are the worst
+
+## Net income of films by country in us compared to overall.
+=======
+>>>>>>> 6cee77440efc81f27a60490ab174a7ccb15eaa33
