@@ -76,7 +76,7 @@ imdb_country %>%
   theme_minimal()
 ```
 
-```{r country-us-rating, echo = FALSE}
+```{r country-us-rating, echo = FALSE, warning = FALSE}
 imdb1990_country <- imdb1990 %>%
   separate_rows(country, sep = "\\,") %>%
   mutate(country = case_when(
@@ -85,10 +85,12 @@ imdb1990_country <- imdb1990 %>%
   )) %>%
   filter(
      country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
-   ) %>%
+   ) 
+
+imdb1990_country_longer <- imdb1990_country %>%
   pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
 
-imdb1990_country %>%
+imdb1990_country_longer %>%
   ggplot(aes(x = rating, fill = us_or_not)) +
   geom_density(alpha = 0.5) +
   facet_wrap(~ country) +
