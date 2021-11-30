@@ -1,5 +1,5 @@
 ---
-title: "Are US IMDb users biased against foreign movies?" 
+title: "Are Subtitles a One-Inch Barrier for American IMDb users?" 
 author: <font size='8'>Calcutta Coders <br> Grace South, Fletcher Adams and Mark Corray</font>
 institute: <font size='10'>University of Edinburgh</font>
 date: <font size = '6'>`r Sys.Date()`</font>
@@ -19,73 +19,110 @@ library(revealjs)
 library(broom)
 library(ggridges)
 library(here)
+library(gt)
 ```
 
-```{r chunk-output}
+```{r chunk-output, include = FALSE}
 knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618, out.width = "80%")
 ```
 
 
 ```{r read-data, include = FALSE}
 imdb <- read.csv(file = here("data/IMDb_movies.csv"), header = TRUE, skip = 1, na.strings = c("NA", "", "None"))
-glimpse(imdb)
+imdb1990 <- read.csv(file = here("data/imdb-merge.csv"))
 ```
-## R Markdown
+## Are US IMDb users biased against foreign movies?
+- Investigating how the average rating of US and non-US users is influenced by country of production
+- Exploring the influence of other variables including genre and income (US or worldwide) have on this relationship
 
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## Average Rating
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
-
-## Slide with Bullets
-
-- Bullet 1
-- Bullet 2
-- Bullet 3
-
-## Slide with R Output
-
-```{r cars, echo = TRUE}
+```{r average-rating, echo = FALSE}
 imdb %>%
-  ggplot(aes(x = votes, y = avg_vote)) +
-  geom_point(alpha = 0.1) +
+  ggplot(aes(x = avg_vote)) +
+  geom_histogram(binwidth = 0.5) +
   labs(
-    title = "Average Rating Based on the Popularity of Movie",
-    x = "Number of Votes",
-    y = "Average Rating"
+    title = "Distribution of Average Rating",
+    x = "Average Rating",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+```
+
+## Average Rating by Country
+
+```{r average-rating-country-table, echo = FALSE}
+imdb_country <- imdb %>%
+  mutate(country = sub("\\ ", "", country)) %>%
+  separate_rows(country, sep = "\\,") %>%
+  mutate(country = case_when(
+    country == "HongKong" ~ "Hong Kong",
+    TRUE ~ country)) %>%
+  filter(
+     country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
+   )
+
+imdb_country %>%
+  group_by(country) %>%
+  summarise(
+    mean_rating = mean(avg_vote, na.rm = TRUE),
+    median_rating = median(avg_vote, na.rm = TRUE)
+    ) %>%
+  arrange(desc(mean_rating)) %>%
+  gt() %>%
+  cols_label(
+    country = "Country",
+    mean_rating = "Mean Rating",
+    median_rating = "Median Rating"
   )
 ```
 
-## Slide with Plot
+## Average Rating by Country
 
-```{r pressure}
-imdb_country <- imdb %>%
-   mutate(country = sub("\\ ", "", country)) %>%
-   separate_rows(country, sep = "\\,")
-   
+```{r average-rating-country, echo = FALSE}
 imdb_country %>%
-   count(country) %>%
-   arrange(desc(n))
- 
-imdb_country %>%
-   filter(
-     country == c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
-   ) %>%
-   group_by(country) %>%
-   summarise(
-     mean_rating = mean(avg_vote, na.rm = TRUE),
-     median_rating = median(avg_vote, na.rm = TRUE)
-     ) %>%
-   arrange(desc(mean_rating))
- 
- imdb_country %>%
-   filter(country == c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")) %>%
-   ggplot(aes(x = avg_vote, y = country, fill = country)) +
-   geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
-   labs(
-     title = "Distribution of IMDb Average Ratings",
-     subtitle = "for top 12 countries who have produced the most films",
-     x = "Average rating",
-     y = "Country"
-   )
+  ggplot(aes(x = avg_vote, y = country, fill = country)) +
+  geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
+  labs(
+    title = "Distribution of IMDb Average Ratings",
+    subtitle = "for top 12 countries who have produced the most films",
+    x = "Average rating",
+    y = NULL
+  ) +
+  theme_minimal()
 ```
 
+## Comparison of US vs. non-US users average rating by country 
+
+```{r country-us-rating, echo = FALSE}
+imdb1990_country <- imdb1990 %>%
+  separate_rows(country, sep = "\\,") %>%
+  mutate(country = case_when(
+    country == "HongKong" ~ "Hong Kong",
+    TRUE ~ country
+  )) %>%
+  filter(
+     country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
+   ) %>%
+  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
+
+imdb1990_country %>%
+  ggplot(aes(x = rating, fill = us_or_not)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ country) +
+  labs(
+    title = "Average Rating by US or non-US users",
+    subtitle = "by country",
+    x = "Average Rating",
+    y = "Density",
+    fill = NULL
+  ) +
+  theme_minimal()
+```
+
+
+## Top Genres for each Country
+
+## Which Genres Do americans think are the worst
+
+## Net income of films by country in us compared to overall.
