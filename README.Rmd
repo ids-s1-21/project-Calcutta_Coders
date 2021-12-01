@@ -74,7 +74,7 @@ imdb_country %>%
 ```
 We are now taking a look at whether the average rating is impacted by the proportion of us voters. Overall, you can see that either the proportion of US voters does not impact the rating, such as for Belgium and Japan, OR a higher proportion of US voters results in a lower rating, such as for Italy and Germany. The USA has a negative association, but this may be because better films will be watched by nonUS users.
 
-
+This is a linear regression of this relationship. The second line reveals that for all countries, as the proportion of US votes increases by 1, the average rating decreases by 
 
 ```{r prop-us-country-regression, echo = FALSE, warning = FALSE}
 imdb_prop_us_reg <- linear_reg() %>%
