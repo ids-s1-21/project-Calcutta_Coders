@@ -114,7 +114,7 @@ imdb_country_longer %>%
 
 
 ## How does the proportion of US votes impact the rating?
-```{r prop-us-country, echo = FALSE}
+```{r prop-us-country, echo = FALSE, warning = FALSE}
 imdb_country %>%
   ggplot(aes(x = prop_us_votes, y = avg_vote, color = country)) +
   geom_point(alpha = 0.3) +
@@ -129,7 +129,7 @@ imdb_country %>%
   theme(legend.position = "none")
 ```
 ## How does the proportion of US votes impact the rating?
-```{r prop-us-country-regression, echo = FALSE}
+```{r prop-us-country-regression, echo = FALSE, warning = FALSE}
 imdb_prop_us_reg <- linear_reg() %>%
   set_engine("lm") %>%
   fit(us_rating ~ prop_us_votes + country, data = imdb_country)
