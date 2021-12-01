@@ -56,12 +56,39 @@ imdb_country %>%
 ```
 From this we can see that Japan and India have by far the highest average rating, with the US and Canada having a considerably lower rating.
 
+<<<<<<< HEAD
 Lets now see if the proportion of US
 
 
 
 
 Lets now look at whether the us votes in line with the rest of the world.
+=======
+We are now taking a look at whether the average rating is impacted by the proportion of us voters. Does US users negatively impact an average rating
+```{r prop-us-country, echo = FALSE, warning = FALSE}
+imdb_country %>%
+  ggplot(aes(x = prop_us_votes, y = avg_vote, color = country)) +
+  geom_point(alpha = 0.3) +
+  stat_smooth(method = "lm", se = FALSE, color = "black") +
+  facet_wrap(~country) +
+  labs(
+    title = "Average Rating vs Proportion of US votes",
+    subtitle = "by country",
+    x = "Proportion of US votes",
+    y = "Average Rating"
+  ) +
+  theme(legend.position = "none")
+```
+
+```{r prop-us-country-regression, echo = FALSE, warning = FALSE}
+imdb_prop_us_reg <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(us_rating ~ prop_us_votes + country, data = imdb_country)
+  tidy(imdb_prop_us_reg)
+```
+
+Lets now look at whether these ratings are similar to the US ratiings or not
+>>>>>>> 354212de9e39cd52f38dc24a6426da0588e20882
 ```{r country-us-rating, echo = FALSE, warning = FALSE}
 imdb1990_country <- imdb1990 %>%
   separate_rows(country, sep = "\\,") %>%

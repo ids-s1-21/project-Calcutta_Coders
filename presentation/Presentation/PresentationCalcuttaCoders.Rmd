@@ -91,28 +91,6 @@ imdb_country %>%
   ) +
   theme_minimal()
 ```
-
-## Comparison of US vs. non-US users' average rating by country 
-
-```{r country-us-rating, echo = FALSE, warning = FALSE}
-imdb_country_longer <- imdb_country %>%
-  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
-
-imdb_country_longer %>%
-  ggplot(aes(x = rating, fill = us_or_not)) +
-  geom_density(alpha = 0.5) +
-  facet_wrap(~ country) +
-  labs(
-    title = "Average Rating by US or non-US users",
-    subtitle = "by country",
-    x = "Average Rating",
-    y = "Density",
-    fill = NULL
-  ) +
-  theme_minimal()
-```
-
-
 ## How does the proportion of US votes impact the rating?
 ```{r prop-us-country, echo = FALSE, warning = FALSE}
 imdb_country %>%
@@ -135,6 +113,27 @@ imdb_prop_us_reg <- linear_reg() %>%
   fit(us_rating ~ prop_us_votes + country, data = imdb_country)
   tidy(imdb_prop_us_reg)
 ```
+## Comparison of US vs. non-US users' average rating by country 
+
+```{r country-us-rating, echo = FALSE, warning = FALSE}
+imdb_country_longer <- imdb_country %>%
+  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
+
+imdb_country_longer %>%
+  ggplot(aes(x = rating, fill = us_or_not)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ country) +
+  labs(
+    title = "Average Rating by US or non-US users",
+    subtitle = "by country",
+    x = "Average Rating",
+    y = "Density",
+    fill = NULL
+  ) +
+  theme_minimal()
+```
+
+
 ## Distribution of US Average Rating for Genres
 
 ```{r data-analysis-genre, echo = FALSE, warning = FALSE}
