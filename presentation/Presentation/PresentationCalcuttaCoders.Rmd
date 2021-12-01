@@ -172,37 +172,6 @@ imdb_genre_reg_US <- linear_reg() %>%
 ```
 R squared: `r glance(imdb_genre_reg_US)$r.squared*100`%
 
-## Does US users rate films higher than non-US users if they generate more income?
-```{r income, echo = FALSE, warning = FALSE, message = FALSE}
-imdb_longer <- imdb %>%
-  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
-   
-imdb_longer %>%
-  ggplot(aes(x = worlwide_gross_income, y = rating, color = us_or_not)) +
-  geom_point(alpha = 0.3) +
-  theme(axis.text.x = element_text(angle = 90)) +
-  labs(
-    title = "Worldwide Gross Income vs. Average Rating",
-    x = "Worldwide Gross Income",
-    y = "Average Rating"
-  ) +
-  stat_smooth(method = "lm", se = FALSE) + 
-  theme_minimal() +
-  scale_x_continuous(breaks = c(0, 1000000000, 2000000000), labels = c("$0", "$1B", "$2B"))
-```
-
-## How is the US rating explained by worlwide income and country?
-```{r income-regression, echo = FALSE, warning = FALSE}
-imdb_income_country_regression <- linear_reg() %>%
-  fit(us_rating ~ log(worlwide_gross_income) + country, data = imdb_country)
-  tidy(imdb_income_country_regression)
-  
-imdb_income_regression <- linear_reg() %>%
-  fit(us_rating ~ log(worlwide_gross_income), data = imdb_country)
-```  
-Income and Country: `r glance(imdb_income_country_regression)$adj.r.squared*100`%
-
-Income: `r glance(imdb_income_regression)$adj.r.squared*100`%
 
 
 
