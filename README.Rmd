@@ -57,12 +57,34 @@ imdb_country %>%
 From this we can see that Japan and India have by far the highest average rating, with the US and Canada having a considerably lower rating.
 
 Lets now look at whether these ratings are similar to the US ratiings or not
--US ratings graph,
+```{r country-us-rating, echo = FALSE, warning = FALSE}
+imdb1990_country <- imdb1990 %>%
+  separate_rows(country, sep = "\\,") %>%
+  mutate(country = case_when(
+    country == "HongKong" ~ "Hong Kong",
+    TRUE ~ country
+  )) %>%
+  filter(
+     country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
+   ) 
 
+imdb1990_country_longer <- imdb1990_country %>%
+  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
 
-
-
-We can now look at some different variables which might be able to explain these differences.
+imdb1990_country_longer %>%
+  ggplot(aes(x = rating, fill = us_or_not)) +
+  geom_density(alpha = 0.5) +
+  facet_wrap(~ country) +
+  labs(
+    title = "Average Rating by US or non-US users",
+    subtitle = "by country",
+    x = "Average Rating",
+    y = "Density",
+    fill = NULL
+  ) +
+  theme_minimal()
+```
+From the graph again we can see that Japanese films have high ratings from both US and non-US voters, but they do have a slightly higher rating from non-US voters. One reason the Japanese films are rated so highly could be because of the worldwide love of anime. Furthermore if we look at another country not known for this such as Italy we can see large variation between the US voter rating and non-US voter rating with the latter being far higher.We can now look at some different variables which might be able to explain these differences.
 
 Firstly lets see if its the genre of films that the country is producing which is causing the discrepancy's.
 To do this lets first see which genres tend to be the worst rated by americans or by the world..
@@ -70,8 +92,26 @@ To do this lets first see which genres tend to be the worst rated by americans o
 Now lets see which are the top genres for each country
 
 Finally to be decisive lets see how the net incomes of films produced in each country varies with income in america and overall. if we notice a difference between how well a film does internationally and in america this may suggest that Americans aren't recommending the film to their friends via word of mouth and this is effecting the general income for the film.
-
-
+```{r data-analysis-income}
+imdb_income_lang <- imdb1990_lang %>%
+  filter(language %in% c("English", "French", "Spanish", "Italian", "German", "Japanese", "Hindi", "Russian", "Mandarin", "Turkish", "Cantonese", "Korean")) %>%
+  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating") %>%
+  mutate( 
+  worlwide_gross_income = na_if(worlwide_gross_income, "")) %>%
+  transform(worlwide_gross_income = as.numeric(gsub("\\$", "", worlwide_gross_income)))
+   
+imdb_income_lang %>%
+  ggplot(aes(x = worlwide_gross_income, y = rating, color = us_or_not)) +
+  geom_point(alpha = 0.1) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(
+    title = "Worldwide Gross Income vs. Average Rating",
+    x = "Worldwide Gross Income",
+    y = "Average Rating"
+  ) +
+  stat_smooth(method = "lm", se = FALSE)
+```
+Through this we can see 
 
 
 In conclusion we can see that...
