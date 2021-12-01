@@ -189,8 +189,6 @@ imdb1990_income %>%
     y = "Average Rating"
   ) +
   stat_smooth(method = "lm", se = FALSE)
-
-glance(score_bty_gender_fit)$r.squared
 ```
 
 ```{r income-regression}

@@ -37,7 +37,7 @@ imdb1990 <- read.csv(file = here("data/imdb-merge.csv"))
 
 ## Average Rating
 
-```{r average-rating, echo = FALSE}
+```{r average-rating, echo = FALSE, warning = FALSE}
 imdb %>%
   ggplot(aes(x = avg_vote)) +
   geom_histogram(binwidth = 0.5) +
@@ -51,7 +51,7 @@ imdb %>%
 
 ## Average Rating by Country
 
-```{r average-rating-country-table, echo = FALSE}
+```{r average-rating-country-table, echo = FALSE, warning = FALSE}
 imdb_country <- imdb %>%
   mutate(country = sub("\\ ", "", country)) %>%
   separate_rows(country, sep = "\\,") %>%
@@ -79,7 +79,7 @@ imdb_country %>%
 
 ## Average Rating by Country
 
-```{r average-rating-country, echo = FALSE}
+```{r average-rating-country, echo = FALSE, warning = FALSE}
 imdb_country %>%
   ggplot(aes(x = avg_vote, y = country, fill = country)) +
   geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
@@ -92,7 +92,7 @@ imdb_country %>%
   theme_minimal()
 ```
 
-## Comparison of US vs. non-US users average rating by country 
+## Comparison of US vs. non-US users' average rating by country 
 
 ```{r country-us-rating, echo = FALSE, warning = FALSE}
 imdb1990_country <- imdb1990 %>%
@@ -124,8 +124,10 @@ imdb1990_country_longer %>%
 
 
 <<<<<<< HEAD
-## Distribution of Genres
-```{r data-analysis-genre}
+
+## Distribution of US Average Rating for Genres
+
+```{r data-analysis-genre, echo = FALSE, wanring = FALSE}
 imdb1990_genre <- imdb1990 %>%
   mutate(genre = sub("\\ ", "", genre)) %>%
   separate_rows(genre, sep = "\\,") %>%
@@ -169,7 +171,7 @@ imdb1990_genre %>%
 
 ## Which Genres Do americans think are the worst
 
-```{r genre-linear-regression, echo = FALSE}
+```{r genre-linear-regression, echo = FALSE, warning = FALSE}
 imdb1990_genre_regression <- imdb1990_genre %>%
   filter(genre %in% c("Drama", "Comedy", "Horror", "Animation", "Action", "Crime"))
 imdb1990_genre_reg_US <- linear_reg() %>%
@@ -178,6 +180,49 @@ imdb1990_genre_reg_US <- linear_reg() %>%
   tidy(imdb1990_genre_reg_US)
 ```
 
-## Net income of films by country in us compared to overall.
-=======
+## Does US users rate films higher than non-US users if they generate more income?
+```{r income, echo = FALSE, warning = FALSE}
+imdb1990_income <- imdb1990 %>%
+  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating") %>%
+  transform(worlwide_gross_income = as.numeric(gsub("\\$", "", worlwide_gross_income)))
+   
+imdb1990_income %>%
+  ggplot(aes(x = worlwide_gross_income, y = rating, color = us_or_not)) +
+  geom_point(alpha = 0.1) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(
+    title = "Worldwide Gross Income vs. Average Rating",
+    x = "Worldwide Gross Income",
+    y = "Average Rating",
+    color = NULL
+  ) +
+  stat_smooth(method = "lm", se = FALSE)
+```
+
+## How is the US rating explained by worlwide income and country?
+```{r income-regression, echo = FALSE, warning = FALSE}
+imdb1990_country_income <- imdb1990 %>%
+  transform(worlwide_gross_income = as.numeric(gsub("\\$", "", worlwide_gross_income))) %>%
+  separate_rows(country, sep = "\\,") %>%
+  mutate(country = case_when(
+    country == "HongKong" ~ "Hong Kong",
+    TRUE ~ country
+  )) %>%
+  filter(
+     country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
+   ) %>%
+  distinct()
+
+imdb1990_income_country_regression <- linear_reg() %>%
+  fit(us_rating ~ worlwide_gross_income + country, data = imdb1990_country_income)
+  tidy(imdb1990_income_country_regression)
+  
+imdb1990_income_regression <- linear_reg() %>%
+  fit(us_rating ~ worlwide_gross_income, data = imdb1990_country_income)
+  
+glance(imdb1990_income_country_regression)$r.squared
+glance(imdb1990_income_regression)$r.squared
+```
+
+
 >>>>>>> 6cee77440efc81f27a60490ab174a7ccb15eaa33
