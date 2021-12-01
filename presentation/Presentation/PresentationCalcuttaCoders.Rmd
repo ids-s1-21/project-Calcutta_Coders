@@ -50,7 +50,7 @@ imdb %>%
 
 ## Average Rating by Country
 
-```{r average-rating-country-table, echo = FALSE, warning = FALSE}
+```{r average-rating-country-table, echo = FALSE, warning = FALSE, message = FALSE}
 imdb_country <- imdb %>%
   mutate(country = sub("\\ ", "", country)) %>%
   separate_rows(country, sep = "\\,") %>%
@@ -68,7 +68,7 @@ imdb_country %>%
     mean_rating = mean(avg_vote, na.rm = TRUE),
     median_rating = median(avg_vote, na.rm = TRUE)
     ) %>%
-  arrange(desc(mean_rating)) %>%
+  arrange(desc(median_rating)) %>%
   gt() %>%
   cols_label(
     country = "Country",
@@ -170,6 +170,7 @@ imdb_genre_reg_US <- linear_reg() %>%
   fit(us_rating ~ genre, data = imdb_genre_regression)
   tidy(imdb_genre_reg_US)
 ```
+R squared: `r glance(imdb_genre_reg_US)$r.squared*100`%
 
 ## Does US users rate films higher than non-US users if they generate more income?
 ```{r income, echo = FALSE, warning = FALSE, message = FALSE}
@@ -193,15 +194,16 @@ imdb_longer %>%
 ## How is the US rating explained by worlwide income and country?
 ```{r income-regression, echo = FALSE, warning = FALSE}
 imdb_income_country_regression <- linear_reg() %>%
-  fit(us_rating ~ worlwide_gross_income + country, data = imdb_country)
+  fit(us_rating ~ log(worlwide_gross_income) + country, data = imdb_country)
   tidy(imdb_income_country_regression)
   
 imdb_income_regression <- linear_reg() %>%
-  fit(us_rating ~ worlwide_gross_income, data = imdb_country)
-  
-glance(imdb_income_country_regression)$r.squared
-glance(imdb_income_regression)$r.squared
-```
+  fit(us_rating ~ log(worlwide_gross_income), data = imdb_country)
+```  
+Income and Country: `r glance(imdb_income_country_regression)$adj.r.squared*100`%
+
+Income: `r glance(imdb_income_regression)$adj.r.squared*100`%
+
 
 
 >>>>>>> 6cee77440efc81f27a60490ab174a7ccb15eaa33
