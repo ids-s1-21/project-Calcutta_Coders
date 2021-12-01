@@ -84,7 +84,7 @@ imdb1990_country_longer %>%
   ) +
   theme_minimal()
 ```
-From the graph again we can see that Japanese films have high ratings from both US and non-US voters, but they do have a slightly higher rating from non-US voters. One reason the Japanese films are rated so highly could be because of the worldwide love of anime. Furthermore if we look at another country not known for this such as Italy we can see large variation between the US voter rating and non-US voter rating with the latter being far higher.We can now look at some different variables which might be able to explain these differences.
+This grph displays the distribution of average rating from US users or from non-US users. From the graph again we can see that Japanese films have high ratings from both US and non-US voters, but they do have a slightly higher rating from non-US voters. One reason the Japanese films are rated so highly could be because of the worldwide love of anime. Furthermore if we look at another country not known for this such as Italy we can see large variation between the US voter rating and non-US voter rating with the latter being far higher.We can now look at some different variables which might be able to explain these differences.
 
 Firstly lets see if its the genre of films that the country is producing which is causing the discrepancy's.
 To do this lets first see which genres tend to be the worst rated by americans or by the world..
