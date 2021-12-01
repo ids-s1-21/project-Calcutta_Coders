@@ -85,7 +85,7 @@ This is a linear regression of this relationship. The second line reveals that f
 Overall, this regression reveals that for most foreign countries, higher proportions of US users negatively impact their ratings
 
 
-Lets now look at whether these ratings are similar to the US ratiings or not
+Lets now compare how US users rate films to how non-US users rate films
 ```{r country-us-rating, echo = FALSE, warning = FALSE}
 imdb1990_country <- imdb1990 %>%
   separate_rows(country, sep = "\\,") %>%
