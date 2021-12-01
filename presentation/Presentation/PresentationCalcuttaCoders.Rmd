@@ -126,7 +126,21 @@ imdb1990_country_longer %>%
 <<<<<<< HEAD
 ## Top Genres for each Country
 
+
 ## Which Genres Do americans think are the worst
+
+```{r genre-linear-regression, echo = FALSE}
+imdb1990_genre_regression <- imdb1990_genre %>%
+  filter(genre %in% c("Drama", "Comedy", "Horror", "Animation", "Action", "Crime"))
+imdb1990_genre_reg_US <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(us_rating ~ genre, data = imdb1990_genre_regression)
+  tidy(imdb1990_genre_reg_US)
+imdb1990_genre_reg_nonUS <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(non_us_rating ~ genre, data = imdb1990_genre_regression)
+  tidy(imdb1990_genre_reg_nonUS)
+```
 
 ## Net income of films by country in us compared to overall.
 =======

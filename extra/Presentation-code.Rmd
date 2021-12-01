@@ -85,7 +85,8 @@ imdb1990_country <- imdb1990 %>%
   )) %>%
   filter(
      country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
-   ) 
+   ) %>%
+  distinct()
 
 imdb1990_country_longer <- imdb1990_country %>%
   pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
@@ -110,7 +111,8 @@ imdb1990_genre <- imdb1990 %>%
  mutate(genre = case_when(
     genre == "SciFi" ~ "Sci Fi",
     genre == "FilmNoir" ~ "Film Noir",
-    TRUE ~ genre))
+    TRUE ~ genre)) %>%
+  distinct()
 
 imdb1990_genre %>%
   filter(
@@ -125,21 +127,70 @@ imdb1990_genre %>%
   )
 ```
 
-```{r top-genre, include = FALSE}
+```{r top-genre}
 imdb1990_genre %>%
-  filter(country == "Italy") %>%
+  filter(str_detect(country, "Italy"))  %>%
   group_by(genre) %>%
   summarise(n = n()) %>%
+  mutate(prop = n / sum(n)) %>%
   arrange(desc(n))
 imdb1990_genre %>%
-  filter(country == "Japan") %>%
+  filter(str_detect(country, "Japan")) %>%
   group_by(genre) %>%
   summarise(n = n()) %>%
+  mutate(prop = n / sum(n)) %>%
   arrange(desc(n))
 imdb1990_genre %>%
-  filter(country == "USA") %>%
+  filter(str_detect(country, "USA")) %>%
   group_by(genre) %>%
   summarise(n = n()) %>%
+  mutate(prop = n / sum(n)) %>%
   arrange(desc(n))
+```
 
+```{r genre-linear-regression, echo = FALSE}
+imdb1990_genre_regression <- imdb1990_genre %>%
+  filter(genre %in% c("Drama", "Comedy", "Horror", "Animation", "Action", "Crime"))
+imdb1990_genre_reg_US <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(us_rating ~ genre, data = imdb1990_genre_regression)
+  tidy(imdb1990_genre_reg_US)
+imdb1990_genre_reg_nonUS <- linear_reg() %>%
+  set_engine("lm") %>%
+  fit(non_us_rating ~ genre, data = imdb1990_genre_regression)
+  tidy(imdb1990_genre_reg_nonUS)
+```
+
+```{r genre-linear-regression2}
+imdb1990_genre_longer <- imdb1990_genre %>%
+  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating") %>%
+  filter(genre %in% c("Drama", "Comedy", "Horror", "Animation", "Action", "Crime"))
+
+linear_reg() %>%
+  set_engine("lm") %>%
+  fit(rating ~ genre + us_or_not, data = imdb1990_genre_longer) %>%
+  tidy()
+  
+  
+```
+
+```{r income}
+imdb1990_country_income <- imdb1990 %>%
+  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating") %>%
+  mutate( 
+    worlwide_gross_income = na_if(worlwide_gross_income, "")) %>%
+    transform(worlwide_gross_income = as.numeric(gsub("\\$", "", worlwide_gross_income))
+  )
+   
+imdb1990_country_income %>%
+  ggplot(aes(x = worlwide_gross_income, y = rating, color = us_or_not)) +
+  geom_point(alpha = 0.1) +
+  facet_wrap(~country) +
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(
+    title = "Worldwide Gross Income vs. Average Rating",
+    x = "Worldwide Gross Income",
+    y = "Average Rating"
+  ) +
+  stat_smooth(method = "lm", se = FALSE)
 ```
