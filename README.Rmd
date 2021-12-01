@@ -74,7 +74,6 @@ imdb_country %>%
 ```
 We are now taking a look at whether the average rating is impacted by the proportion of us voters. Overall, you can see that either the proportion of US voters does not impact the rating, such as for Belgium and Japan, OR a higher proportion of US voters results in a lower rating, such as for Italy and Germany. The USA has a negative association, but this may be because better films will be watched by nonUS users.
 
-This is a linear regression of this relationship. The second line reveals that for all countries, as the proportion of US votes increases by 1, the average rating decreases by 
 
 ```{r prop-us-country-regression, echo = FALSE, warning = FALSE}
 imdb_prop_us_reg <- linear_reg() %>%
@@ -82,6 +81,9 @@ imdb_prop_us_reg <- linear_reg() %>%
   fit(us_rating ~ prop_us_votes + country, data = imdb_country)
   tidy(imdb_prop_us_reg)
 ```
+This is a linear regression of this relationship. The second line reveals that for all countries, as the proportion of US votes increases by 1, the average rating decreases on average by 0.6. Other lines in the regression output shows the average rating of a country when the proportion of US votes is held constant. Some of the low average ratings include Italy and Turkey. 
+Overall, this regression reveals that for most foreign countries, higher proportions of US users negatively impact their ratings
+
 
 Lets now look at whether these ratings are similar to the US ratiings or not
 ```{r country-us-rating, echo = FALSE, warning = FALSE}
@@ -111,7 +113,10 @@ imdb1990_country_longer %>%
   ) +
   theme_minimal()
 ```
+<<<<<<< HEAD
 Here we can see that the us underrates all of our looked at countries, apart from the UK and Canada both of which are obviously English Speaking. It also interestingly overrates its own films compared to the rest of the world.
+=======
+>>>>>>> f5c62a737e5bc073e9f84ffbda3a7002a98792eb
 
 This graph displays the distribution of average rating from US users or from non-US users. From the graph again we can see that Japanese films have high ratings from both US and non-US voters, but they do have a slightly higher rating from non-US voters. One reason the Japanese films are rated so highly could be because of the worldwide love of anime. Furthermore if we look at another country not known for this such as Italy we can see large variation between the US voter rating and non-US voter rating with the latter being far higher.
 
