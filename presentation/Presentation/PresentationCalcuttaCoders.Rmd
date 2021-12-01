@@ -33,7 +33,7 @@ imdb1990 <- read.csv(file = here("data/imdb-merge.csv"))
 ```
 ## Are US IMDb users biased against foreign movies?
 - Investigating how the average rating of US and non-US users is influenced by country of production
-- Exploring the influence of other variables including genre and income (US or worldwide) have on this relationship
+- Exploring the influence of other variables including genre and worldwide income have on this relationship
 
 ## Average Rating
 
@@ -127,7 +127,7 @@ imdb1990_country_longer %>%
 
 ## Distribution of US Average Rating for Genres
 
-```{r data-analysis-genre, echo = FALSE, wanring = FALSE}
+```{r data-analysis-genre, echo = FALSE, warning = FALSE}
 imdb1990_genre <- imdb1990 %>%
   mutate(genre = sub("\\ ", "", genre)) %>%
   separate_rows(genre, sep = "\\,") %>%
@@ -152,6 +152,8 @@ imdb1990_genre %>%
 ```
 
 ## Top Genres for each Country
+<div>
+  <div style="float: left; width: 50%;">
 - Italy
   1. Drama (28%)
   2. Comedy (26%)
@@ -162,12 +164,15 @@ imdb1990_genre %>%
   2. Action (13%)
   3. Animation (13%)
   4. Comedy (8.6%)
+</div>
+  <div style="float: left; width: 50%;">
 - USA
   1. Drama (20%)
   2. Comedy (14%)
   3. Action (8.6%)
-  4. Horror (7.4%)
-  
+  4. Horror (7.4%)</div>
+</div>
+
 
 ## Which Genres Do americans think are the worst
 
