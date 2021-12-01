@@ -88,8 +88,46 @@ From the graph again we can see that Japanese films have high ratings from both 
 
 Firstly lets see if its the genre of films that the country is producing which is causing the discrepancy's.
 To do this lets first see which genres tend to be the worst rated by americans or by the world..
--Graph
-Now lets see which are the top genres for each country
+```{r data-analysis-genre}
+imdb1990_genre <- imdb1990 %>%
+  mutate(genre = sub("\\ ", "", genre)) %>%
+  separate_rows(genre, sep = "\\,") %>%
+ mutate(genre = case_when(
+    genre == "SciFi" ~ "Sci Fi",
+    genre == "FilmNoir" ~ "Film Noir",
+    TRUE ~ genre)) %>%
+  distinct()
+
+imdb1990_genre %>%
+  filter(
+    genre %in% c("Drama", "Comedy", "Action", "Horror", "Crime", "Thriller", "Romance", "Adventure", "Mystery", "Family")
+  ) %>%
+  ggplot(aes(x = us_rating, y = genre, fill = genre)) +
+  geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
+  labs(
+    title = "Distribution of US IMDb Average Rating by Genre",
+    x = "Average Rating",
+    y = "Genre"
+  ) +
+  theme_minimal()
+```
+Now lets see which are the top genres for each country:
+- Italy
+  1. Drama (28%)
+  2. Comedy (26%)
+  3. Crime (6.1%)
+  4. Horror (3.8%)
+- Japan
+  1. Drama (18%)
+  2. Action (13%)
+  3. Animation (13%)
+  4. Comedy (8.6%)
+- USA
+  1. Drama (20%)
+  2. Comedy (14%)
+  3. Action (8.6%)
+  4. Horror (7.4%)
+  
 
 Finally to be decisive lets see how the net incomes of films produced in each country varies with income in america and overall. if we notice a difference between how well a film does internationally and in america this may suggest that Americans aren't recommending the film to their friends via word of mouth and this is effecting the general income for the film.
 ```{r data-analysis-income}
