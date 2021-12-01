@@ -171,7 +171,7 @@ imdb_longer %>%
   geom_point(alpha = 0.3) +
   theme(axis.text.x = element_text(angle = 90)) +
   labs(
-    title = "Worldwide Gross Income vs. Average Rating",
+    title = "Average Rating vs. Worldwide Gross Income",
     x = "Worldwide Gross Income",
     y = "Average Rating"
   ) +
@@ -181,13 +181,33 @@ imdb_longer %>%
 ```
 
 ```{r income-regression}
+
 imdb_income_country_regression <- linear_reg() %>%
-  fit(us_rating ~ worlwide_gross_income + country, data = imdb_country)
+  fit(us_rating ~ log(worlwide_gross_income) + country, data = imdb_country)
   tidy(imdb_income_country_regression)
   
 imdb_income_regression <- linear_reg() %>%
-  fit(us_rating ~ worlwide_gross_income, data = imdb_country)
+  fit(us_rating ~ log(worlwide_gross_income), data = imdb_country)
   
-glance(imdb_income_country_regression)$r.squared
-glance(imdb_income_regression)$r.squared
+glance(imdb_income_country_regression)$adj.r.squared
+glance(imdb_income_regression)$adj.r.squared
+```
+
+```{r residuals}
+imdb_country_log <- imdb_country %>%
+  mutate(log_worlwide_income = log(worlwide_gross_income)) 
+
+imdb_income_regression_bug <- linear_reg() %>%
+  fit(us_rating ~ log_worlwide_income, data = imdb_country_log)
+
+imdb_income_regression_aug <- augment(imdb_income_regression_bug$fit)
+
+ggplot(data = imdb_income_regression_aug) +
+  geom_jitter(aes(x = .fitted, y = .resid)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(
+    title = "Residual plot of log(us avg rating) vs. worldwide income",
+    x = "Predicted Values",
+    y = "Residuals"
+  )
 ```
