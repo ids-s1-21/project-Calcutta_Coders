@@ -185,7 +185,7 @@ imdb1990_country_income <- imdb1990 %>%
 imdb1990_country_income %>%
   ggplot(aes(x = worlwide_gross_income, y = rating, color = us_or_not)) +
   geom_point(alpha = 0.1) +
-  facet_wrap(~country) +
+  facet_wrap(~country, scales = "free_x") +
   theme(axis.text.x = element_text(angle = 90)) +
   labs(
     title = "Worldwide Gross Income vs. Average Rating",
