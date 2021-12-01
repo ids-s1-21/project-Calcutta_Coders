@@ -81,6 +81,7 @@ imdb_country %>%
   theme(legend.position = "none")
 ```
 
+
 ```{r prop-us-country-regression, echo = FALSE, warning = FALSE}
 imdb_prop_us_reg <- linear_reg() %>%
   set_engine("lm") %>%
