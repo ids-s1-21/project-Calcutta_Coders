@@ -143,7 +143,7 @@ imdb1990_genre %>%
   ) +
   theme_minimal()
 ```
-From this we can see that Animation and Drama are by far the highest rated, followed by Crime, Comedy and action. Finally Horror is byfar the lowest rated out of the common genres.
+From this we can see that Animation and Drama are by far the highest rated, followed by Crime, Comedy and action. Finally Horror is byfar the lowest rated out of the most common genres.
 
 Now lets see which are the top genres for each country:
 - Italy
@@ -162,11 +162,10 @@ Now lets see which are the top genres for each country:
   3. Action (8.6%)
   4. Horror (7.4%)
   
-  We know that the Horror genre is quite poorly rated by US users so this could explain why films produced in Italy are on the whole not as high rated. Japan has a large percentage of Animation movies which are the highest rated by US users, however we still see that the US rates Japan lower then the rest of the world does, this could suggest that there is a bias against Japenese films in the US.
+  We know that the Horror genre is quite poorly rated by US users so this could explain why films produced in Italy are on the whole not as high rated. Japan has a large percentage of Animation movies, which should then lead to them being above averagely rated by American Users. However we see that Japan is still underrated compared to the rest of the world by American users. 
+So as we see the US does underrate all of the major non-English speaking countries, and the main genres of film produced by the other countries does not discount this. This leads me to conclude that the US is unable to get over the one inch barrier of subtitles and therefore has a bias against non English films.
 
-
-
-In conclusion we can see that...
+Thanks for listening to our presentation!
 
 
 
