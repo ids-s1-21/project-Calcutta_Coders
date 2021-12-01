@@ -28,8 +28,7 @@ knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618,
 
 
 ```{r read-data, include = FALSE}
-imdb <- read.csv(file = here("data/IMDb_movies.csv"), header = TRUE, skip = 1, na.strings = c("NA", "", "None"))
-imdb1990 <- read.csv(file = here("data/imdb-merge.csv"))
+imdb <- read.csv(file = here("data/imdb-merge.csv"))
 ```
 ## Are US IMDb users biased against foreign movies?
 - Investigating how the average rating of US and non-US users is influenced by country of production
@@ -60,7 +59,8 @@ imdb_country <- imdb %>%
     TRUE ~ country)) %>%
   filter(
      country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
-   )
+   ) %>%
+  distinct()
 
 imdb_country %>%
   group_by(country) %>%
@@ -95,20 +95,10 @@ imdb_country %>%
 ## Comparison of US vs. non-US users' average rating by country 
 
 ```{r country-us-rating, echo = FALSE, warning = FALSE}
-imdb1990_country <- imdb1990 %>%
-  separate_rows(country, sep = "\\,") %>%
-  mutate(country = case_when(
-    country == "HongKong" ~ "Hong Kong",
-    TRUE ~ country
-  )) %>%
-  filter(
-     country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
-   ) 
-
-imdb1990_country_longer <- imdb1990_country %>%
+imdb_country_longer <- imdb_country %>%
   pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
 
-imdb1990_country_longer %>%
+imdb_country_longer %>%
   ggplot(aes(x = rating, fill = us_or_not)) +
   geom_density(alpha = 0.5) +
   facet_wrap(~ country) +
@@ -128,16 +118,12 @@ imdb1990_country_longer %>%
 ## Distribution of US Average Rating for Genres
 
 ```{r data-analysis-genre, echo = FALSE, warning = FALSE}
-imdb1990_genre <- imdb1990 %>%
+imdb_genre <- imdb %>%
   mutate(genre = sub("\\ ", "", genre)) %>%
   separate_rows(genre, sep = "\\,") %>%
- mutate(genre = case_when(
-    genre == "SciFi" ~ "Sci Fi",
-    genre == "FilmNoir" ~ "Film Noir",
-    TRUE ~ genre)) %>%
   distinct()
 
-imdb1990_genre %>%
+imdb_genre %>%
   filter(
     genre %in% c("Drama", "Comedy", "Action", "Horror", "Crime", "Thriller", "Romance", "Adventure", "Mystery", "Family")
   ) %>%
@@ -177,56 +163,44 @@ imdb1990_genre %>%
 ## Which Genres Do americans think are the worst
 
 ```{r genre-linear-regression, echo = FALSE, warning = FALSE}
-imdb1990_genre_regression <- imdb1990_genre %>%
+imdb_genre_regression <- imdb_genre %>%
   filter(genre %in% c("Drama", "Comedy", "Horror", "Animation", "Action", "Crime"))
-imdb1990_genre_reg_US <- linear_reg() %>%
+imdb_genre_reg_US <- linear_reg() %>%
   set_engine("lm") %>%
-  fit(us_rating ~ genre, data = imdb1990_genre_regression)
-  tidy(imdb1990_genre_reg_US)
+  fit(us_rating ~ genre, data = imdb_genre_regression)
+  tidy(imdb_genre_reg_US)
 ```
 
 ## Does US users rate films higher than non-US users if they generate more income?
-```{r income, echo = FALSE, warning = FALSE}
-imdb1990_income <- imdb1990 %>%
-  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating") %>%
-  transform(worlwide_gross_income = as.numeric(gsub("\\$", "", worlwide_gross_income)))
+```{r income, echo = FALSE, warning = FALSE, message = FALSE}
+imdb_longer <- imdb %>%
+  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
    
-imdb1990_income %>%
+imdb_longer %>%
   ggplot(aes(x = worlwide_gross_income, y = rating, color = us_or_not)) +
-  geom_point(alpha = 0.1) +
+  geom_point(alpha = 0.3) +
   theme(axis.text.x = element_text(angle = 90)) +
   labs(
     title = "Worldwide Gross Income vs. Average Rating",
     x = "Worldwide Gross Income",
-    y = "Average Rating",
-    color = NULL
+    y = "Average Rating"
   ) +
-  stat_smooth(method = "lm", se = FALSE)
+  stat_smooth(method = "lm", se = FALSE) + 
+  theme_minimal() +
+  scale_x_continuous(breaks = c(0, 1000000000, 2000000000), labels = c("$0", "$1B", "$2B"))
 ```
 
 ## How is the US rating explained by worlwide income and country?
 ```{r income-regression, echo = FALSE, warning = FALSE}
-imdb1990_country_income <- imdb1990 %>%
-  transform(worlwide_gross_income = as.numeric(gsub("\\$", "", worlwide_gross_income))) %>%
-  separate_rows(country, sep = "\\,") %>%
-  mutate(country = case_when(
-    country == "HongKong" ~ "Hong Kong",
-    TRUE ~ country
-  )) %>%
-  filter(
-     country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
-   ) %>%
-  distinct()
-
-imdb1990_income_country_regression <- linear_reg() %>%
-  fit(us_rating ~ worlwide_gross_income + country, data = imdb1990_country_income)
-  tidy(imdb1990_income_country_regression)
+imdb_income_country_regression <- linear_reg() %>%
+  fit(us_rating ~ worlwide_gross_income + country, data = imdb_country)
+  tidy(imdb_income_country_regression)
   
-imdb1990_income_regression <- linear_reg() %>%
-  fit(us_rating ~ worlwide_gross_income, data = imdb1990_country_income)
+imdb_income_regression <- linear_reg() %>%
+  fit(us_rating ~ worlwide_gross_income, data = imdb_country)
   
-glance(imdb1990_income_country_regression)$r.squared
-glance(imdb1990_income_regression)$r.squared
+glance(imdb_income_country_regression)$r.squared
+glance(imdb_income_regression)$r.squared
 ```
 
 

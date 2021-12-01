@@ -39,10 +39,15 @@ imdb1990 <- merge(imdb_user3, imdb, by.x = "id", by.y = "imdb_title_id")
 imdb1990 <- imdb1990 %>%
   mutate(
     country = sub("\\ ", "", country),
+    genre = sub("\\ ", "", genre),
     us_votes = as.numeric(str_remove_all(us_votes, "\n|\\,")),
     non_us_votes = as.numeric(str_remove_all(non_us_votes, "\n|\\,")),
     prop_us_votes = us_votes/(us_votes + non_us_votes)
-    )
+    ) %>%
+  transform(
+    worlwide_gross_income = as.numeric(gsub("\\$", "", worlwide_gross_income)),
+    usa_gross_income = as.numeric(gsub("\\$", "", usa_gross_income))) %>%
+  distinct()
 ```
 
 ```{r write-data}

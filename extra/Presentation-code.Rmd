@@ -21,8 +21,7 @@ library(gt)
 ```
 
 ```{r read-data, include = FALSE}
-imdb <- read.csv(file = here("data/IMDb_movies.csv"), header = TRUE, skip = 1, na.strings = c("NA", "", "None"))
-imdb1990 <- read.csv(file = here("data/imdb-merge.csv"))
+imdb <- read.csv(file = here("data/imdb-merge.csv"))
 ```
 
 ```{r average-rating, echo = FALSE}
@@ -39,14 +38,14 @@ imdb %>%
 
 ```{r average-rating-country-table, echo = FALSE}
 imdb_country <- imdb %>%
-  mutate(country = sub("\\ ", "", country)) %>%
   separate_rows(country, sep = "\\,") %>%
   mutate(country = case_when(
     country == "HongKong" ~ "Hong Kong",
     TRUE ~ country)) %>%
   filter(
      country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
-   )
+   ) %>%
+  distinct()
 
 imdb_country %>%
   group_by(country) %>%
@@ -77,21 +76,11 @@ imdb_country %>%
 ```
 
 ```{r country-us-rating, echo = FALSE, warning = FALSE}
-imdb1990_country <- imdb1990 %>%
-  separate_rows(country, sep = "\\,") %>%
-  mutate(country = case_when(
-    country == "HongKong" ~ "Hong Kong",
-    TRUE ~ country
-  )) %>%
-  filter(
-     country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
-   ) %>%
-  distinct()
 
-imdb1990_country_longer <- imdb1990_country %>%
+imdb_country_longer <- imdb_country %>%
   pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
 
-imdb1990_country_longer %>%
+imdb_country_longer %>%
   ggplot(aes(x = rating, fill = us_or_not)) +
   geom_density(alpha = 0.5) +
   facet_wrap(~ country) +
@@ -105,16 +94,15 @@ imdb1990_country_longer %>%
   theme_minimal()
 ```
 ```{r data-analysis-genre}
-imdb1990_genre <- imdb1990 %>%
-  mutate(genre = sub("\\ ", "", genre)) %>%
+imdb_genre <- imdb %>%
   separate_rows(genre, sep = "\\,") %>%
- mutate(genre = case_when(
+  mutate(genre = case_when(
     genre == "SciFi" ~ "Sci Fi",
     genre == "FilmNoir" ~ "Film Noir",
     TRUE ~ genre)) %>%
   distinct()
 
-imdb1990_genre %>%
+imdb_genre %>%
   filter(
     genre %in% c("Drama", "Comedy", "Action", "Horror", "Crime", "Thriller", "Romance", "Adventure", "Mystery", "Family")
   ) %>%
@@ -128,19 +116,19 @@ imdb1990_genre %>%
 ```
 
 ```{r top-genre}
-imdb1990_genre %>%
+imdb_genre %>%
   filter(str_detect(country, "Italy"))  %>%
   group_by(genre) %>%
   summarise(n = n()) %>%
   mutate(prop = n / sum(n)) %>%
   arrange(desc(n))
-imdb1990_genre %>%
+imdb_genre %>%
   filter(str_detect(country, "Japan")) %>%
   group_by(genre) %>%
   summarise(n = n()) %>%
   mutate(prop = n / sum(n)) %>%
   arrange(desc(n))
-imdb1990_genre %>%
+imdb_genre %>%
   filter(str_detect(country, "USA")) %>%
   group_by(genre) %>%
   summarise(n = n()) %>%
@@ -149,68 +137,57 @@ imdb1990_genre %>%
 ```
 
 ```{r genre-linear-regression, echo = FALSE}
-imdb1990_genre_regression <- imdb1990_genre %>%
+imdb_genre_regression <- imdb_genre %>%
   filter(genre %in% c("Drama", "Comedy", "Horror", "Animation", "Action", "Crime"))
-imdb1990_genre_reg_US <- linear_reg() %>%
+imdb_genre_reg_US <- linear_reg() %>%
   set_engine("lm") %>%
-  fit(us_rating ~ genre, data = imdb1990_genre_regression)
-  tidy(imdb1990_genre_reg_US)
-imdb1990_genre_reg_nonUS <- linear_reg() %>%
+  fit(us_rating ~ genre, data = imdb_genre_regression)
+  tidy(imdb_genre_reg_US)
+imdb_genre_reg_nonUS <- linear_reg() %>%
   set_engine("lm") %>%
-  fit(non_us_rating ~ genre, data = imdb1990_genre_regression)
-  tidy(imdb1990_genre_reg_nonUS)
+  fit(non_us_rating ~ genre, data = imdb_genre_regression)
+  tidy(imdb_genre_reg_nonUS)
 ```
 
 ```{r genre-linear-regression2}
-imdb1990_genre_longer <- imdb1990_genre %>%
+imdb_genre_longer <- imdb_genre %>%
   pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating") %>%
   filter(genre %in% c("Drama", "Comedy", "Horror", "Animation", "Action", "Crime"))
 
 linear_reg() %>%
   set_engine("lm") %>%
-  fit(rating ~ genre + us_or_not, data = imdb1990_genre_longer) %>%
+  fit(rating ~ genre + us_or_not, data = imdb_genre_longer) %>%
   tidy()
   
   
 ```
 
 ```{r income}
-imdb1990_income <- imdb1990 %>%
-  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating") %>%
-  transform(worlwide_gross_income = as.numeric(gsub("\\$", "", worlwide_gross_income)))
+imdb_longer <- imdb %>%
+  pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
    
-imdb1990_income %>%
+imdb_longer %>%
   ggplot(aes(x = worlwide_gross_income, y = rating, color = us_or_not)) +
-  geom_point(alpha = 0.1) +
+  geom_point(alpha = 0.3) +
   theme(axis.text.x = element_text(angle = 90)) +
   labs(
     title = "Worldwide Gross Income vs. Average Rating",
     x = "Worldwide Gross Income",
     y = "Average Rating"
   ) +
-  stat_smooth(method = "lm", se = FALSE)
+  stat_smooth(method = "lm", se = FALSE) + 
+  theme_minimal() +
+  scale_x_continuous(breaks = c(0, 1000000000, 2000000000), labels = c("$0", "$1B", "$2B"))
 ```
 
 ```{r income-regression}
-imdb1990_country_income <- imdb1990 %>%
-  transform(worlwide_gross_income = as.numeric(gsub("\\$", "", worlwide_gross_income))) %>%
-  separate_rows(country, sep = "\\,") %>%
-  mutate(country = case_when(
-    country == "HongKong" ~ "Hong Kong",
-    TRUE ~ country
-  )) %>%
-  filter(
-     country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
-   ) %>%
-  distinct()
-
-imdb1990_income_country_regression <- linear_reg() %>%
-  fit(us_rating ~ worlwide_gross_income + country, data = imdb1990_country_income)
-  tidy(imdb1990_income_country_regression)
+imdb_income_country_regression <- linear_reg() %>%
+  fit(us_rating ~ worlwide_gross_income + country, data = imdb_country)
+  tidy(imdb_income_country_regression)
   
-imdb1990_income_regression <- linear_reg() %>%
-  fit(us_rating ~ worlwide_gross_income, data = imdb1990_country_income)
+imdb_income_regression <- linear_reg() %>%
+  fit(us_rating ~ worlwide_gross_income, data = imdb_country)
   
-glance(imdb1990_income_country_regression)$r.squared
-glance(imdb1990_income_regression)$r.squared
+glance(imdb_income_country_regression)$r.squared
+glance(imdb_income_regression)$r.squared
 ```
