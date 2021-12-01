@@ -125,7 +125,8 @@ imdb_country %>%
     subtitle = "by country",
     x = "Proportion of US votes",
     y = "Average Rating"
-  )
+  ) +
+  theme(legend.position = "none")
 ```
 ## How does the proportion of US votes impact the rating?
 ```{r prop-us-country-regression, echo = FALSE}
