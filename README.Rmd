@@ -113,6 +113,10 @@ imdb1990_country_longer %>%
   ) +
   theme_minimal()
 ```
+<<<<<<< HEAD
+Here we can see that the us underrates all of our looked at countries, apart from the UK and Canada both of which are obviously English Speaking. It also interestingly overrates its own films compared to the rest of the world.
+=======
+>>>>>>> f5c62a737e5bc073e9f84ffbda3a7002a98792eb
 
 This graph displays the distribution of average rating from US users or from non-US users. From the graph again we can see that Japanese films have high ratings from both US and non-US voters, but they do have a slightly higher rating from non-US voters. One reason the Japanese films are rated so highly could be because of the worldwide love of anime. Furthermore if we look at another country not known for this such as Italy we can see large variation between the US voter rating and non-US voter rating with the latter being far higher.
 
