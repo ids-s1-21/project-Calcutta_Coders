@@ -84,10 +84,10 @@ imdb1990_country_longer %>%
   ) +
   theme_minimal()
 ```
-From the graph again we can see that Japanese films have high ratings from both US and non-US voters, but they do have a slightly higher rating from non-US voters. One reason the Japanese films are rated so highly could be because of the worldwide love of anime. Furthermore if we look at another country not known for this such as Italy we can see large variation between the US voter rating and non-US voter rating with the latter being far higher.We can now look at some different variables which might be able to explain these differences.
+This grph displays the distribution of average rating from US users or from non-US users. From the graph again we can see that Japanese films have high ratings from both US and non-US voters, but they do have a slightly higher rating from non-US voters. One reason the Japanese films are rated so highly could be because of the worldwide love of anime. Furthermore if we look at another country not known for this such as Italy we can see large variation between the US voter rating and non-US voter rating with the latter being far higher.We can now look at some different variables which might be able to explain these differences.
 
 Firstly lets see if its the genre of films that the country is producing which is causing the discrepancy's.
-To do this lets first see which genres tend to be the worst rated by americans or by the world..
+To do this lets first see which genres tend to be the worst rated by Americans users.
 ```{r data-analysis-genre}
 imdb1990_genre <- imdb1990 %>%
   mutate(genre = sub("\\ ", "", genre)) %>%
@@ -111,6 +111,8 @@ imdb1990_genre %>%
   ) +
   theme_minimal()
 ```
+From this we can see that Animation and Drama are by far the highest rated, followed by Crime, Comedy and action. Finally Horror is byfar the lowest rated out of the common genres.
+
 Now lets see which are the top genres for each country:
 - Italy
   1. Drama (28%)
@@ -128,8 +130,9 @@ Now lets see which are the top genres for each country:
   3. Action (8.6%)
   4. Horror (7.4%)
   
+  We know that the Horror genre is quite poorly rated by US users so this could explain why films produced in Italy are on the whole not as high rated. Japan has a large percentage of Animation movies which are the highest rated by US users, however we still see that the US rates Japan lower then the rest of the world does, this could suggest that there is a bias against Japenese films in the US.
 
-Finally to be decisive lets see how the net incomes of films produced in each country varies with income in america and overall. if we notice a difference between how well a film does internationally and in america this may suggest that Americans aren't recommending the film to their friends via word of mouth and this is effecting the general income for the film.
+Finally to be decisive lets see how the net incomes of films produced in each country varies with income in america and overall. If we notice a difference between how well a film does internationally and in america this may suggest that Americans aren't recommending the film to their friends via word of mouth and this is effecting the general income for the film.
 ```{r data-analysis-income}
 imdb_income_lang <- imdb1990_lang %>%
   filter(language %in% c("English", "French", "Spanish", "Italian", "German", "Japanese", "Hindi", "Russian", "Mandarin", "Turkish", "Cantonese", "Korean")) %>%

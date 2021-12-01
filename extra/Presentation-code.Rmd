@@ -167,17 +167,19 @@ imdb_longer <- imdb %>%
   pivot_longer(cols = c(us_rating, non_us_rating), names_to = "us_or_not", values_to = "rating")
    
 imdb_longer %>%
-  ggplot(aes(x = worlwide_gross_income, y = rating, color = us_or_not)) +
+  ggplot(aes(x = usa_gross_income, y = rating, color = us_or_not)) +
   geom_point(alpha = 0.3) +
   theme(axis.text.x = element_text(angle = 90)) +
   labs(
-    title = "Average Rating vs. Worldwide Gross Income",
-    x = "Worldwide Gross Income",
-    y = "Average Rating"
+    title = "Average Rating vs. US Gross Income",
+    x = "US Gross Income",
+    y = "Average Rating",
+    color = NULL
   ) +
   stat_smooth(method = "lm", se = FALSE) + 
   theme_minimal() +
-  scale_x_continuous(breaks = c(0, 1000000000, 2000000000), labels = c("$0", "$1B", "$2B"))
+  scale_x_continuous(breaks = c(0, 250000000, 500000000, 750000000), labels = c("$0", "$250M", "$500M", "$750M"))
+  
 ```
 
 ```{r income-regression}
