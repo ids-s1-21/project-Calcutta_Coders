@@ -130,7 +130,7 @@ imdb_genre %>%
   theme_minimal()
 ```
 
-From this we can see that animation and drama are by far the highest rated, followed by romance, comedy, crime, family, adventure, action, mystery and thriller. Finally, horror is by far the lowest rated out of the most common genres. To investigate how genre impacts US ratings we are focusing on Italy, India, Japan and the US.
+From this we can see that animation and drama are by far the highest rated, followed by romance, comedy, crime, family, adventure, action, mystery and thriller. Finally, horror is by far the lowest rated out of the most common genres. To investigate how genre impacts US ratings we are focusing on the most common film genres in Italy, India, Japan and the US.
 
 ```{r top-genre, echo = FALSE}
 imdb_genre %>%

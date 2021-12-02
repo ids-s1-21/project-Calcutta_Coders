@@ -8,10 +8,14 @@ Our aim in this project is to investigate whether US users have a bias
 against foreign films. We are using a data set called IMDb movies from
 kaggle. The data came from the public IMDb website. We filtered for only
 films from 1990 to today, in order to keep the analysis relevant. We
-also scraped the variables `us_votes` (number of US votes), `us_rating`
-(average rating from US users), `non_us_votes` (number of non US votes),
-and `non_us_rating` (average rating from non US users) directly from the
-IMDb website. There are 15282 movies and 23 variables in the dataset.
+also scraped the variables `us_votes`, `us_rating`, `non_us_votes`, and
+`non_us_rating` directly from the IMDb website. There are 15282 movies
+and 23 variables in the dataset. The outcome (response, Y) will be the
+average IMDb ratings (`avg_vote`, `us_rating` or `non_us_rating`). The
+predictor (explanatory, X) will be `country`. We will also take a look
+at whether the proportion of US votes negatively impacts a movie’s
+rating for each country. Finally, to further analyze this relationship,
+we will consider the possible confounding variables genre.
 
 ![](README_files/figure-gfm/average-rating-1.png)<!-- -->
 
@@ -86,7 +90,8 @@ From this we can see that animation and drama are by far the highest
 rated, followed by romance, comedy, crime, family, adventure, action,
 mystery and thriller. Finally, horror is by far the lowest rated out of
 the most common genres. To investigate how genre impacts US ratings we
-are focusing on Italy, India, Japan and the US.
+are focusing on the most common film genres in Italy, India, Japan and
+the US.
 
     ## # A tibble: 34 × 3
     ##   genre     n_Italy   prop
