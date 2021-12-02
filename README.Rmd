@@ -1,20 +1,8 @@
 ---
-title: How does the country a film was made in affect iMDb ratings?
+title: How does the country a film was made in affect IMDb ratings?
 author: Calcutta_Coders
 output: github_document
 ---
-
-Introduction:
-
-Our aim in this project is to find out how IMDb ratings compare for films from different countries. We are using a data set called IMDb movies from kaggle. The data set was originally from the public iMDb website which shows all the ratings and then this was filtered to only films from 1990 to today, in order to make the analysis more relevant. We also scraped the variables us_votes (number of US votes), us_rating (average rating from US users), non_us_votes (number of non US votes), and non_us_rating (average rating from non US users). Each case is a different film for this data set. We will compare how the country of origin affects iMDb ratings.
-
-Data analysis plan:
-
-The outcome (response, Y) will be the average IMDb ratings, The predictor (explanatory, X) will be country.  We will also take a look at whether the proportion of US votes negatively impacts a movie's rating for each country. Finally, to further analyze this relationship, we will consider possible confounding variables including genre and us income.
-
-
-## Summary
-
 ```{r setup, include = FALSE}
 library(rmarkdown)
 library(tidyverse)
@@ -30,7 +18,9 @@ library(gt)
 imdb <- read.csv(file = here("data/imdb-merge.csv"))
 ```
 
-To start with we will look at the spread of the general ratings on IMDb.
+## Summary
+
+Our aim in this project is to investigate whether US users have a bias against foreign films. We are using a data set called IMDb movies from kaggle. The data came from the public IMDb website. We filtered for only films from 1990 to today, in order to keep the analysis relevant. We also scraped the variables `us_votes` (number of US votes), `us_rating` (average rating from US users), `non_us_votes` (number of non US votes), and `non_us_rating` (average rating from non US users) directly from the IMDb website. There are `r nrow(imdb)` movies and `r ncol(imdb)` variables in the dataset. 
 
 ```{r average-rating, echo = FALSE, warning = FALSE}
 imdb %>%
@@ -44,13 +34,10 @@ imdb %>%
   theme_minimal()
 ```
 
-From the graph we can see that there is a large left skew, showing that most movies are rated higher on IMDb.
-
-Next if we look at the average ratings per country we can start to build up an understanding of how films produced in different countries compare with there average IMDbs ratings.
+The shape of the distribution of `avg_vote` is left skewed, showing that most movies are rated higher on IMDb, with a median of `r median(imdb$avg_vote)`. To focus our analysis, we have filtered for the top 12 countries who have produced the most films rated on IMDb. 
 
 ```{r average-rating-country, echo = FALSE, warning = FALSE, message = FALSE}
 imdb_country <- imdb %>%
-  mutate(country = sub("\\ ", "", country)) %>%
   separate_rows(country, sep = "\\,") %>%
   mutate(country = case_when(
     country == "HongKong" ~ "Hong Kong",
@@ -59,20 +46,6 @@ imdb_country <- imdb %>%
      country %in% c("USA", "France", "UK", "India", "Italy", "Germany", "Japan", "Canada", "Spain", "Hong Kong", "Turkey", "Belgium")
    ) %>%
   distinct()
-
-imdb_country %>%
-  group_by(country) %>%
-  summarise(
-    mean_rating = mean(avg_vote, na.rm = TRUE),
-    median_rating = median(avg_vote, na.rm = TRUE)
-    ) %>%
-  arrange(desc(median_rating)) %>%
-  gt() %>%
-  cols_label(
-    country = "Country",
-    mean_rating = "Mean Rating",
-    median_rating = "Median Rating"
-  )
 
 imdb_country %>%
   ggplot(aes(x = avg_vote, y = country, fill = country)) +
@@ -86,12 +59,13 @@ imdb_country %>%
   theme_minimal()
 ```
 
-From this we can see that Japan and India have by far the highest average rating, with the US and Canada having a considerably lower rating. The spread for country is similarily left skewed for each country.
+From the distribution of `avg_vote` for each country we can see that Japan and India have by far the highest average rating, with the US and Canada having a considerably lower rating.  This brings up the possibility that the US overall rates movies lower than other countries since their own movies have the lowest median.
+In order to understand exactly how the number US votes impact the rating of a movie, we decided to see if the proportion of US votes negatively impacts `avg_vote`.
 
-Now lets have a look at whether the proportion of US votes impacts the rating of the film.
 
 ```{r prop-us-country, echo = FALSE, warning = FALSE}
 imdb_country %>%
+  mutate(prop_us_votes = us_votes/(us_votes + non_us_votes)) %>%
   ggplot(aes(x = prop_us_votes, y = avg_vote, color = country)) +
   geom_point(alpha = 0.3) +
   stat_smooth(method = "lm", se = FALSE, color = "black") +
@@ -103,20 +77,14 @@ imdb_country %>%
     y = "Average Rating"
   ) +
   theme(legend.position = "none")
-```
 
-Overall, you can see that either the proportion of US voters does not impact the rating, such as for Belgium and Japan, OR a higher proportion of US voters results in a lower rating, such as for Italy and Germany. The USA has a negative association, but this may be because better films will be watched by nonUS users.
-
-
-```{r prop-us-country-regression, echo = FALSE, warning = FALSE}
 imdb_prop_us_reg <- linear_reg() %>%
   set_engine("lm") %>%
   fit(us_rating ~ prop_us_votes + country, data = imdb_country)
   tidy(imdb_prop_us_reg)
 ```
 
-The linear regression of this relationship reveals that for all countries, as the proportion of US votes increases by 1, the average rating decreases on average by 0.6. Other lines in the regression output shows the average rating of a country when the proportion of US votes is held constant. Some of the low average ratings include Italy and Turkey. 
-Overall, this regression reveals that for most foreign countries, higher proportions of US users negatively impact their ratings. This leads us to the question: Do US users give lower ratings than the rest of the world to other countries?
+Overall, we can see that either the proportion of US voters does not impact the rating, such as for Belgium and Japan, or a higher proportion of US voters results in a lower rating, such as for Italy and Germany. The linear regression of this relationship reveals that for all countries, as the proportion of US votes increases by 1, the average rating decreases on average by 0.6. This supports the possibility that the US overall rates movies lower. Furthermore, the US also has a negative association; however, this may be because better films will be watched by more non-US users. If this is the case, the data suggests that US users underrate foreign films. To answer this we decided to investigate the difference between `us_rating` and `non_us_rating`.
 
 
 ```{r country-us-rating, echo = FALSE, warning = FALSE}
@@ -137,22 +105,17 @@ imdb_country_longer %>%
   theme_minimal()
 ```
 
-This graph displays the distribution of average rating from US users or from non-US users. From the graph again we can see that Japanese films have high ratings from both US and non-US voters, but they do have a slightly higher rating from non-US voters. One reason the Japanese films are rated so highly could be because of the worldwide love of anime. Furthermore if we look at another country not known for this such as Italy we can see large variation between the US voter rating and non-US voter rating with the latter being far higher.
-
-We can now look at some different variables which might be able to explain these differences.
-
-Firstly lets see if its the genre of films that the country is producing which is causing the discrepancy's.
-To do this lets first see which genres tend to be the worst rated by Americans users.
+This graph displays the distribution of average rating from US users or from non-US users. Interestingly, all majority English speaking countries, UK, US, and Canada, have higher overall ratings from US users. This reveals that US users do not rate movies lower. We can see that Japanese films have high ratings from both US and non-US voters, but they do have a slightly higher rating from non-US voters. One reason the Japanese films are rated so highly could be because of the worldwide love of anime. Another noticeable case is Italy, who have a much higher non-US rating.  We can now look at some different variables which might be able to explain these differences.
+We want to find out which genres tend to be the worst rated by US users, by looking at the distribution of `us_rating` for the most popular genres.
 
 ```{r data-analysis-genre, echo = FALSE, warning = FALSE}
 imdb_genre <- imdb %>%
-  mutate(genre = sub("\\ ", "", genre)) %>%
   separate_rows(genre, sep = "\\,") %>%
   distinct()
 
 imdb_genre %>%
   filter(
-    genre %in% c("Drama", "Comedy", "Action", "Horror", "Crime", "Thriller", "Romance", "Adventure", "Mystery", "Family")
+    genre %in% c("Drama", "Comedy", "Action", "Horror", "Crime", "Thriller", "Romance", "Adventure", "Mystery", "Family", "Animation")
   ) %>%
   ggplot(aes(x = us_rating, y = genre, fill = genre)) +
   geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
@@ -164,38 +127,38 @@ imdb_genre %>%
   theme_minimal()
 ```
 
-From this we can see that Animation and Drama are by far the highest rated, followed by Crime, Comedy and action. Finally Horror is byfar the lowest rated out of the most common genres.
-
-Now lets see which are the top genres for Italy, Japan and the US.
+From this we can see that animation and drama are by far the highest rated, followed by romance, comedy, crime, family, adventure, action, mystery and thriller. Finally, horror is by far the lowest rated out of the most common genres. To investigate how genre impacts US ratings we are focusing on Italy, India, Japan and the US.
 
 ```{r top-genre, echo = FALSE}
 imdb_genre %>%
   filter(str_detect(country, "Italy"))  %>%
   group_by(genre) %>%
-  summarise(n = n()) %>%
-  mutate(prop = n / sum(n)) %>%
-  arrange(desc(n)) %>%
+  summarise(n_Italy = n()) %>%
+  mutate(prop = n_Italy / sum(n_Italy)) %>%
+  arrange(desc(n_Italy)) %>%
+  print(n = 5) 
+imdb_genre %>%
+  filter(str_detect(country, "India")) %>%
+  group_by(genre) %>%
+  summarise(n_India = n()) %>%
+  mutate(prop = n_India / sum(n_India)) %>%
+  arrange(desc(n_India)) %>%
   print(n = 5)
 imdb_genre %>%
   filter(str_detect(country, "Japan")) %>%
   group_by(genre) %>%
-  summarise(n = n()) %>%
-  mutate(prop = n / sum(n)) %>%
-  arrange(desc(n)) %>%
+  summarise(n_Japan = n()) %>%
+  mutate(prop = n_Japan / sum(n_Japan)) %>%
+  arrange(desc(n_Japan)) %>%
   print(n = 5)
 imdb_genre %>%
   filter(str_detect(country, "USA")) %>%
   group_by(genre) %>%
-  summarise(n = n()) %>%
-  mutate(prop = n / sum(n)) %>%
-  arrange(desc(n)) %>%
+  summarise(n_USA = n()) %>%
+  mutate(prop = n_USA / sum(n_USA)) %>%
+  arrange(desc(n_USA)) %>%
   print(n = 5)
-```
 
-  We know that the Horror genre is quite poorly rated by US users so this could explain why films produced in Italy are on the whole not as high rated. Japan has a large percentage of Animation movies, which should then lead to them being above averagely rated by American Users. However we see that Japan is still underrated compared to the rest of the world by American users. 
-So as we see the US does underrate all of the major non-English speaking countries, and the main genres of film produced by the other countries does not discount this. This leads us to conclude that the US is unable to get over the one inch barrier of subtitles and therefore has a bias against non English films.
-
-```{r genre-linear-regression, echo = FALSE, warning = FALSE}
 imdb_genre_regression <- imdb_genre %>%
   filter(genre %in% c("Drama", "Comedy", "Horror", "Animation", "Action", "Crime"))
 imdb_genre_reg_US <- linear_reg() %>%
@@ -204,19 +167,24 @@ imdb_genre_reg_US <- linear_reg() %>%
   tidy(imdb_genre_reg_US)
 ```
 
+We know that the horror genre is quite poorly rated by US users so this could explain why films produced in Italy are on the whole not as high rated. However, the US has a higher percentage of horror, and Italy has high proportions of drama and comedy, both a part of the US's three favorite genres. This leads us to believe that `genre` is not the reason why the US under-rates Italy. Additionally Japan has a large percentage of animation movies, which should then lead to them being above averagely rated by American users. However we see that Japan is still slightly underrated compared to the rest of the world by American users. India, who is over-rated by the US has lower proportions of the top three highest US rated genres than Italy.
+
+Since the proportion of US users negatively impacts rating, the US overrates the major English speaking countries and genre does not explain some of US under-rating of films, we are led to believe that the US does have a bias against foreign movies, particularly movies from countries who's primary language is not English. Maybe the US still cannot get over the one inch barrier of subtitles. 
+
 
 ## Presentation
 
-Our presentation can be found [here](presentation/presentation.html).
+Our presentation can be found [here](presentation/Presentation/PresentationCalcuttaCoders.html).
 The video of our presentation can be found [here](https://media.ed.ac.uk/media/IDS+final+-+Calcutta+Coders/1_4v2f1upp).
 
 ## Data 
 
-Leone, S, 2020, *IMDb movies extensive dataset*, Kaggle, viewed 25 November 2021, <https://www.kaggle.com/stefanoleone992/imdb-extensive-dataset>
+Leone, S 2020, *IMDb movies extensive dataset*, Kaggle, viewed 25 November 2021, <https://www.kaggle.com/stefanoleone992/imdb-extensive-dataset>
 
 Additional variables scraped from [imdb.com](https://www.imdb.com/).
 
 ## References
 
+Leone, S 2020, *IMDb movies extensive dataset*, Kaggle, viewed 25 November 2021, <https://www.kaggle.com/stefanoleone992/imdb-extensive-dataset>
 
 

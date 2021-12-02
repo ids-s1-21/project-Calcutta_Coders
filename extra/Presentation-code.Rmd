@@ -92,6 +92,13 @@ imdb_country_longer %>%
     fill = NULL
   ) +
   theme_minimal()
+
+imdb_country %>%
+  group_by(country) %>%
+  summarise(
+    us_avg = mean(us_rating, na.rm = TRUE),
+    non_us_avg = mean(non_us_rating)
+  )
 ```
 
 ```{r data-analysis-prop-us-country}
@@ -114,7 +121,7 @@ imdb_genre <- imdb %>%
 
 imdb_genre %>%
   filter(
-    genre %in% c("Drama", "Comedy", "Action", "Horror", "Crime", "Thriller", "Romance", "Adventure", "Mystery", "Family")
+    genre %in% c("Drama", "Comedy", "Action", "Horror", "Crime", "Thriller", "Romance", "Adventure", "Mystery", "Family", "Animation")
   ) %>%
   ggplot(aes(x = us_rating, y = genre, fill = genre)) +
   geom_density_ridges(alpha = 0.5, show.legend = FALSE) +
@@ -123,7 +130,15 @@ imdb_genre %>%
     x = "Average Rating",
     y = "Genre"
   )
+imdb_genre %>%
+  filter(
+    genre %in% c("Drama", "Comedy", "Action", "Horror", "Crime", "Thriller", "Romance", "Adventure", "Mystery", "Family", "Animation")
+  ) %>%
+  group_by(genre) %>%
+  summarise(rating = median(us_rating, na.rm = TRUE)) %>%
+  arrange(desc(rating))
 ```
+
 
 ```{r top-genre}
 imdb_genre %>%
