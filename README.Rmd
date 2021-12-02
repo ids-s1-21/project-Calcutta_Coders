@@ -17,11 +17,11 @@ library(gt)
 
 imdb <- read.csv(file = here("data/imdb-merge.csv"))
 ```
-Codebook
 
 ## Summary
 
 Our aim in this project is to investigate whether US users have a bias against foreign films. We are using a data set called IMDb movies from kaggle. The data came from the public IMDb website. We filtered for only films from 1990 to today, in order to keep the analysis relevant. We also scraped the variables `us_votes`, `us_rating`, `non_us_votes`, and `non_us_rating` directly from the IMDb website. There are `r nrow(imdb)` movies and `r ncol(imdb)` variables in the dataset. 
+The outcome (response, Y) will be the average IMDb ratings (`avg_vote`, `us_rating` or `non_us_rating`). The predictor (explanatory, X) will be `country`.  We will also take a look at whether the proportion of US votes negatively impacts a movie's rating for each country. Finally, to further analyze this relationship, we will consider the possible confounding variables genre.
 
 ```{r average-rating, echo = FALSE, warning = FALSE}
 imdb %>%
