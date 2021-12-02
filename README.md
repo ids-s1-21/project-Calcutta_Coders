@@ -11,7 +11,7 @@ films from 1990 to today, in order to keep the analysis relevant. We
 also scraped the variables `us_votes` (number of US votes), `us_rating`
 (average rating from US users), `non_us_votes` (number of non US votes),
 and `non_us_rating` (average rating from non US users) directly from the
-IMDb website. There are 15282 movies and 24 variables in the dataset.
+IMDb website. There are 15282 movies and 23 variables in the dataset.
 
 ![](README_files/figure-gfm/average-rating-1.png)<!-- -->
 
@@ -148,13 +148,14 @@ of animation movies, which should then lead to them being above
 averagely rated by American users. However we see that Japan is still
 slightly underrated compared to the rest of the world by American users.
 India, who is over-rated by the US has lower proportions of the top
-three highest US rated genres than Italy. Since the proportion of US
-users negatively impacts rating, the US overrates the major English
-speaking countries and genre does not explain some of US under-rating of
-films, we are led to believe that the US does have a bias against
-foreign movies, particularly movies from countries who’s primary
-language is not English. Maybe the US still cannot get over the one inch
-barrier of subtitles.
+three highest US rated genres than Italy.
+
+Since the proportion of US users negatively impacts rating, the US
+overrates the major English speaking countries and genre does not
+explain some of US under-rating of films, we are led to believe that the
+US does have a bias against foreign movies, particularly movies from
+countries who’s primary language is not English. Maybe the US still
+cannot get over the one inch barrier of subtitles.
 
 ## Presentation
 

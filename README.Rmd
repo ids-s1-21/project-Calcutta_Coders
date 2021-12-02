@@ -17,10 +17,11 @@ library(gt)
 
 imdb <- read.csv(file = here("data/imdb-merge.csv"))
 ```
+Codebook
 
 ## Summary
 
-Our aim in this project is to investigate whether US users have a bias against foreign films. We are using a data set called IMDb movies from kaggle. The data came from the public IMDb website. We filtered for only films from 1990 to today, in order to keep the analysis relevant. We also scraped the variables `us_votes` (number of US votes), `us_rating` (average rating from US users), `non_us_votes` (number of non US votes), and `non_us_rating` (average rating from non US users) directly from the IMDb website. There are `r nrow(imdb)` movies and `r ncol(imdb)` variables in the dataset. 
+Our aim in this project is to investigate whether US users have a bias against foreign films. We are using a data set called IMDb movies from kaggle. The data came from the public IMDb website. We filtered for only films from 1990 to today, in order to keep the analysis relevant. We also scraped the variables `us_votes`, `us_rating`, `non_us_votes`, and `non_us_rating` directly from the IMDb website. There are `r nrow(imdb)` movies and `r ncol(imdb)` variables in the dataset. 
 
 ```{r average-rating, echo = FALSE, warning = FALSE}
 imdb %>%
@@ -64,8 +65,10 @@ In order to understand exactly how the number US votes impact the rating of a mo
 
 
 ```{r prop-us-country, echo = FALSE, warning = FALSE}
+imdb_country <- imdb_country %>%
+  mutate(prop_us_votes = us_votes/(us_votes + non_us_votes))
+
 imdb_country %>%
-  mutate(prop_us_votes = us_votes/(us_votes + non_us_votes)) %>%
   ggplot(aes(x = prop_us_votes, y = avg_vote, color = country)) +
   geom_point(alpha = 0.3) +
   stat_smooth(method = "lm", se = FALSE, color = "black") +

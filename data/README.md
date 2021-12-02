@@ -2,10 +2,7 @@
 
 library(tidyverse)
 
-Place data file(s) in this folder.
-
-Then, include codebooks (variables, and their descriptions) for your data file(s)
-using the following format.
+The dataset is called imdb-merge.csv and has 15282 rows, or movies, and 24 variables.
 
 ## imdb-merge.csv
 
